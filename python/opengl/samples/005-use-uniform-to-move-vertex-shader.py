@@ -15,11 +15,13 @@ vertexShader = """
 layout (location = 0) in vec3 aPos;   // the position variable has attribute position 0
 layout (location = 1) in vec3 aColor; // the color variable has attribute position 1
 
+uniform float xOffset;
+
 out vec3 ourColor; // output a color to the fragment shader
 
 void main()
 {
-    gl_Position = vec4(aPos, 1.0);
+    gl_Position = vec4(aPos.x+xOffset, aPos.y, aPos.z, 1.0);
     ourColor = aColor; // set ourColor to the input color we got from the vertex data
 }      
 """
@@ -78,8 +80,11 @@ def prepareDisplay():
     glClearColor(0.0, 0.0, 0.0, 1.0)
     glClear(GL_COLOR_BUFFER_BIT)
 
-def drawObject(shaderProgram, vertices, VAO):
+def drawObject(shaderProgram, vertices, VAO, xOffset):
+    xOffsetLocation = glGetUniformLocation(shaderProgram, "xOffset")
     glUseProgram(shaderProgram)
+
+    glUniform1f(xOffsetLocation, xOffset);
     
     glBindVertexArray(VAO)
     glDrawArrays(GL_TRIANGLES, 0, 3)
@@ -87,6 +92,17 @@ def drawObject(shaderProgram, vertices, VAO):
 def display():
     glBindVertexArray(0)
     glUseProgram(0)
+
+def changeOffset(xOffset, direction):
+    if direction == 1.0:
+        if xOffset >= 0.5:
+            direction = -1.0
+    else:
+        if xOffset <= -0.5:
+            direction = 1.0
+    xOffset += direction * 0.01
+
+    return [xOffset, direction]
 
 def main():
     pygame.init()
@@ -99,6 +115,8 @@ def main():
     VAO = createObject(shaderProgram, vertices1)
     
     clock = pygame.time.Clock()
+    xOffset = 0.0
+    direction = 1.0
     
     done = False
     while not done:
@@ -106,8 +124,10 @@ def main():
             if event.type == pygame.QUIT:
                 done = True
         
+        xOffset, direction = changeOffset(xOffset, direction)
+
         prepareDisplay()
-        drawObject(shaderProgram, vertices1, VAO)
+        drawObject(shaderProgram, vertices1, VAO, xOffset)
         display()
         pygame.display.flip()
         clock.tick(60)
