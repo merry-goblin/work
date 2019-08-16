@@ -65,32 +65,35 @@ def createObject(shaderProgram, vertices, indices):
     EBO = glGenBuffers(1)
 
     # Bind the Vertex Array Object first
-    glBindVertexArray(VAO);
+    glBindVertexArray(VAO)
 
     # Bind the Vertex Buffer
     glBindBuffer(GL_ARRAY_BUFFER, VBO)
-    glBufferData(GL_ARRAY_BUFFER, ArrayDatatype.arrayByteCount(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, ArrayDatatype.arrayByteCount(vertices), vertices, GL_STATIC_DRAW)
 
-    # Bind the E*** Buffer
-    glBindBuffer(GL_ARRAY_BUFFER, EBO)
-    glBufferData(GL_ARRAY_BUFFER, ArrayDatatype.arrayByteCount(indices), indices, GL_STATIC_DRAW);
+    # Bind the Entity Buffer
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO)
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, ArrayDatatype.arrayByteCount(indices), indices, GL_STATIC_DRAW)
 
     # Configure vertex attribute
 
     # - Position attribute
     attrPositionIndex = glGetAttribLocation(shaderProgram, 'attrPosition')
-    glVertexAttribPointer(attrPositionIndex, NB_POSITION_AXES, GL_FLOAT, GL_FALSE, 8 * ctypes.sizeof(ctypes.c_float), ctypes.c_void_p(0));
-    glEnableVertexAttribArray(attrPositionIndex);
+    if (attrPositionIndex != -1):
+        glVertexAttribPointer(attrPositionIndex, NB_POSITION_AXES, GL_FLOAT, GL_FALSE, 8 * ctypes.sizeof(ctypes.c_float), ctypes.c_void_p(0))
+        glEnableVertexAttribArray(attrPositionIndex)
 
     # - Color attribute
-    attrColorIndex = glGetAttribLocation(shaderProgram, 'attrColor')
-    glVertexAttribPointer(attrColorIndex, NB_COLOR_AXES, GL_FLOAT, GL_FALSE, 8 * ctypes.sizeof(ctypes.c_float), ctypes.c_void_p(3* ctypes.sizeof(ctypes.c_float)));
-    glEnableVertexAttribArray(attrColorIndex);
+    attrColorIndex = glGetAttribLocation(shaderProgram, 'attrColor') # doesn't work ?
+    if (attrColorIndex != -1):
+        glVertexAttribPointer(attrColorIndex, NB_COLOR_AXES, GL_FLOAT, GL_FALSE, 8 * ctypes.sizeof(ctypes.c_float), ctypes.c_void_p(3 * ctypes.sizeof(ctypes.c_float)))
+        glEnableVertexAttribArray(attrColorIndex)
 
     # - Texture coordinates attribute
     attrTexCoordsIndex = glGetAttribLocation(shaderProgram, 'attrTexCoords')
-    glVertexAttribPointer(attrTexCoordsIndex, NB_TEX_COORDS_AXES, GL_FLOAT, GL_FALSE, 8 * ctypes.sizeof(ctypes.c_float), ctypes.c_void_p(6* ctypes.sizeof(ctypes.c_float)));
-    glEnableVertexAttribArray(attrTexCoordsIndex);
+    if (attrTexCoordsIndex != -1):
+        glVertexAttribPointer(attrTexCoordsIndex, NB_TEX_COORDS_AXES, GL_FLOAT, GL_FALSE, 8 * ctypes.sizeof(ctypes.c_float), ctypes.c_void_p(6 * ctypes.sizeof(ctypes.c_float)))
+        glEnableVertexAttribArray(attrTexCoordsIndex)
 
 
     # Texture
@@ -98,26 +101,32 @@ def createObject(shaderProgram, vertices, indices):
     texture = glGenTextures(1)
     glBindTexture(GL_TEXTURE_2D, texture)
     # Set the texture wrapping parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); # Set texture wrapping to GL_REPEAT (default wrapping method)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT) # Set texture wrapping to GL_REPEAT (default wrapping method)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
     # Set texture filtering parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
 
     image = pygame.image.load('images/wall.jpg').convert_alpha()
     imageData = pygame.image.tostring(image, 'RGBA', 1)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.get_width(), image.get_height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData)
-    glGenerateMipmap(GL_TEXTURE_2D);
+    glGenerateMipmap(GL_TEXTURE_2D)
 
     # Unbind the VAO
     glBindVertexArray(0)
 
     # Unbind the VBO
     glBindBuffer(GL_ARRAY_BUFFER, 0)
-    glDisableVertexAttribArray(attrPositionIndex)
-    #glDisableVertexAttribArray(attrColorIndex)
-    glDisableVertexAttribArray(attrTexCoordsIndex)
+    if (attrPositionIndex != -1):
+        glDisableVertexAttribArray(attrPositionIndex)
+    if (attrColorIndex != -1):
+        glDisableVertexAttribArray(attrColorIndex)
+    if (attrTexCoordsIndex != -1):
+        glDisableVertexAttribArray(attrTexCoordsIndex)
     
+    # Unbind the EBO
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0)
+
     return VAO, texture
 
 def initDisplay(shaderProgram):
@@ -134,11 +143,11 @@ def prepareDisplay():
 def drawObject(shaderProgram, VAO, texture):
 
     glActiveTexture(GL_TEXTURE0)
-    glBindTexture(GL_TEXTURE_2D, texture);
+    glBindTexture(GL_TEXTURE_2D, texture)
 
     glUseProgram(shaderProgram)
     glBindVertexArray(VAO)
-    #glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    #glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0)
     glDrawArrays(GL_TRIANGLES, 0, 6)
 
 def display():
