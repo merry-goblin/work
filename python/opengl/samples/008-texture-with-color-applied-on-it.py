@@ -36,7 +36,7 @@ in vec2 vsTexCoords;
 out vec4 FragColor;
 void main()
 {
-    FragColor = vec4(texture(texUniform, vsTexCoords).rgb, 1);
+    FragColor = vec4(texture(texUniform, vsTexCoords).rgb, 1) * vec4(vsColor, 1.0);
 }
 """
 

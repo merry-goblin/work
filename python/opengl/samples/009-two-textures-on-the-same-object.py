@@ -28,15 +28,18 @@ void main()
 
 fragmentShader = """
 #version 330 core
-uniform sampler2D texUniform;
 
 in vec3 vsColor;
 in vec2 vsTexCoords;
 
 out vec4 FragColor;
+
+uniform sampler2D texture1;
+uniform sampler2D texture2;
+
 void main()
 {
-    FragColor = vec4(texture(texUniform, vsTexCoords).rgb, 1);
+    FragColor = mix(texture(texture1, vsTexCoords), texture(texture2, vec2(-vsTexCoords.x, vsTexCoords.y)), 0.2);
 }
 """
 
@@ -97,10 +100,10 @@ def createObject(shaderProgram, vertices, indices):
         glEnableVertexAttribArray(attrTexCoordsIndex)
 
 
-    # Texture
+    # Textures
     
-    texture = glGenTextures(1)
-    glBindTexture(GL_TEXTURE_2D, texture)
+    texture1 = glGenTextures(1)
+    glBindTexture(GL_TEXTURE_2D, texture1)
     # Set the texture wrapping parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT) # Set texture wrapping to GL_REPEAT (default wrapping method)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
@@ -109,6 +112,22 @@ def createObject(shaderProgram, vertices, indices):
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
 
     image = pygame.image.load('images/wall.jpg').convert_alpha()
+    imageData = pygame.image.tostring(image, 'RGBA', 1)
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.get_width(), image.get_height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData)
+    glGenerateMipmap(GL_TEXTURE_2D)
+
+    #
+
+    texture2 = glGenTextures(1)
+    glBindTexture(GL_TEXTURE_2D, texture2)
+    # Set the texture wrapping parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT) # Set texture wrapping to GL_REPEAT (default wrapping method)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
+    # Set texture filtering parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+
+    image = pygame.image.load('images/awesomeface.png').convert_alpha()
     imageData = pygame.image.tostring(image, 'RGBA', 1)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.get_width(), image.get_height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData)
     glGenerateMipmap(GL_TEXTURE_2D)
@@ -128,23 +147,27 @@ def createObject(shaderProgram, vertices, indices):
     # Unbind the EBO
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0)
 
-    return VAO, texture
+    return VAO, texture1, texture2
 
 def initDisplay(shaderProgram):
     glEnable(GL_DEPTH_TEST)
 
     glUseProgram(shaderProgram)
-    textureUniformIndex = glGetUniformLocation(shaderProgram, 'texUniform')
+    textureUniformIndex = glGetUniformLocation(shaderProgram, 'texture1')
     glUniform1i(textureUniformIndex, 0)
+    textureUniformIndex = glGetUniformLocation(shaderProgram, 'texture2')
+    glUniform1i(textureUniformIndex, 1)
 
 def prepareDisplay():
     glClearColor(0.2, 0.3, 0.3, 1.0)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
-def drawObject(shaderProgram, VAO, texture):
+def drawObject(shaderProgram, VAO, texture1, texture2):
 
     glActiveTexture(GL_TEXTURE0)
-    glBindTexture(GL_TEXTURE_2D, texture)
+    glBindTexture(GL_TEXTURE_2D, texture1)
+    glActiveTexture(GL_TEXTURE1)
+    glBindTexture(GL_TEXTURE_2D, texture2)
 
     glUseProgram(shaderProgram)
     glBindVertexArray(VAO)
@@ -162,10 +185,10 @@ def main():
     shaderProgram = shaders.compileProgram(
         shaders.compileShader(vertexShader, GL_VERTEX_SHADER),
         shaders.compileShader(fragmentShader, GL_FRAGMENT_SHADER))
-    
-    initDisplay(shaderProgram)
 
-    VAO, texture = createObject(shaderProgram, vertices1, indices1)
+    VAO, texture1, texture2 = createObject(shaderProgram, vertices1, indices1)
+
+    initDisplay(shaderProgram)
 
     clock = pygame.time.Clock()
 
@@ -176,7 +199,7 @@ def main():
                 done = True
 
         prepareDisplay()
-        drawObject(shaderProgram, VAO, texture)
+        drawObject(shaderProgram, VAO, texture1, texture2)
         display()
         pygame.display.flip()
         clock.tick(60)
