@@ -42,7 +42,7 @@ void main()
 
 vertices1 = farray([
     # positions        # colors         # texture coords
-     0.5,  0.5, 0.0,   1.0, 0.0, 0.0,   1.0, 1.0,   # top right
+     0.8,  0.5, 0.0,   1.0, 0.0, 0.0,   1.0, 1.0,   # top right
      0.5, -0.5, 0.0,   0.0, 1.0, 0.0,   1.0, 0.0,   # bottom right
     -0.5, -0.5, 0.0,   0.0, 0.0, 1.0,   0.0, 0.0,   # bottom left
     -0.5,  0.5, 0.0,   1.0, 1.0, 0.0,   0.0, 1.0,   # top left 
@@ -105,7 +105,7 @@ def drawObject(shaderProgram, vertices, VAO, time):
     glUseProgram(shaderProgram)
 
     # Matrix
-    matrix = TranslationMatrix(sin(time)*.5, 0, 0)
+    matrix = RotationMatrix(sin(time)*90, (0,0,1))
     attrMatrixIndex = glGetUniformLocation(shaderProgram, 'matrix')
     glUniformMatrix4fv(attrMatrixIndex, 1, True, matrix)
 
@@ -118,7 +118,7 @@ def display():
 
 def main():
     pygame.init()
-    screen = pygame.display.set_mode((800, 600), pygame.OPENGL|pygame.DOUBLEBUF)
+    screen = pygame.display.set_mode((600, 600), pygame.OPENGL|pygame.DOUBLEBUF)
 
     shaderProgram = shaders.compileProgram(
         shaders.compileShader(vertexShader, GL_VERTEX_SHADER),

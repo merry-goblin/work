@@ -5,6 +5,7 @@ from OpenGL.GL import *
 from OpenGL.GL import shaders
 import ctypes
 import pygame
+from math import sin, cos, degrees, radians, tan
 
 from vecutils import * # téléchargez vecutils ici
 
@@ -42,10 +43,10 @@ void main()
 
 vertices1 = farray([
     # positions        # colors         # texture coords
-     0.5,  0.5, 0.0,   1.0, 0.0, 0.0,   1.0, 1.0,   # top right
-     0.5, -0.5, 0.0,   0.0, 1.0, 0.0,   1.0, 0.0,   # bottom right
-    -0.5, -0.5, 0.0,   0.0, 0.0, 1.0,   0.0, 0.0,   # bottom left
-    -0.5,  0.5, 0.0,   1.0, 1.0, 0.0,   0.0, 1.0,   # top left 
+     0.5,  0.5,  1.0,   1.0, 0.0, 0.0,   1.0, 1.0,   # top right
+     0.5, -0.5,  0.0,   0.0, 1.0, 0.0,   1.0, 0.0,   # bottom right
+    -0.5, -0.5,  0.0,   0.0, 0.0, 1.0,   0.0, 0.0,   # bottom left
+    -0.5,  0.5,  0.0,   1.0, 1.0, 0.0,   0.0, 1.0,   # top left 
 ])
 
 indices1 = np.array([
@@ -99,15 +100,19 @@ def createObject(shaderProgram, vertices, indices):
 
 def prepareDisplay():
     glClearColor(0.0, 0.0, 0.0, 1.0)
-    glClear(GL_COLOR_BUFFER_BIT)
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
 def drawObject(shaderProgram, vertices, VAO, time):
     glUseProgram(shaderProgram)
 
+    pMatrix = PerspectiveMatrix(45, 1.0 * 800/600, 0.1, 100)
+
+    lMatrix = LookAtMatrix(vec3(1.0, 1.0, 1.0), (0, 0, 0), (0, 0, 1))
+
     # Matrix
-    matrix = TranslationMatrix(sin(time)*.5, 0, 0)
+    objectMatrix = TranslationMatrix(sin(time), 0, 0)
     attrMatrixIndex = glGetUniformLocation(shaderProgram, 'matrix')
-    glUniformMatrix4fv(attrMatrixIndex, 1, True, matrix)
+    glUniformMatrix4fv(attrMatrixIndex, 1, True, pMatrix @ lMatrix @ objectMatrix)
 
     glBindVertexArray(VAO)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, ctypes.c_void_p(0))
@@ -119,6 +124,8 @@ def display():
 def main():
     pygame.init()
     screen = pygame.display.set_mode((800, 600), pygame.OPENGL|pygame.DOUBLEBUF)
+
+    glEnable(GL_DEPTH_TEST)
 
     shaderProgram = shaders.compileProgram(
         shaders.compileShader(vertexShader, GL_VERTEX_SHADER),

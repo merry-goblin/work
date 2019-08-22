@@ -105,7 +105,7 @@ def drawObject(shaderProgram, vertices, VAO, time):
     glUseProgram(shaderProgram)
 
     # Matrix
-    matrix = TranslationMatrix(sin(time)*.5, 0, 0)
+    matrix = ScaleMatrix(1/4)
     attrMatrixIndex = glGetUniformLocation(shaderProgram, 'matrix')
     glUniformMatrix4fv(attrMatrixIndex, 1, True, matrix)
 
@@ -118,7 +118,7 @@ def display():
 
 def main():
     pygame.init()
-    screen = pygame.display.set_mode((800, 600), pygame.OPENGL|pygame.DOUBLEBUF)
+    screen = pygame.display.set_mode((600, 600), pygame.OPENGL|pygame.DOUBLEBUF)
 
     shaderProgram = shaders.compileProgram(
         shaders.compileShader(vertexShader, GL_VERTEX_SHADER),
