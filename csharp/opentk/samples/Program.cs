@@ -10,7 +10,7 @@ namespace OpenTKSamples
         [STAThread]
         static void Main()
         {
-            var sample = new Sample004(800, 600);
+            var sample = new Sample005(800, 600);
             sample.Run();
         }
     }
