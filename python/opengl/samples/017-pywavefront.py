@@ -14,13 +14,15 @@ vertexShader = """
 
 precision mediump float;
 layout (location = 0) in vec3 attrPosition;
-layout (location = 1) in vec3 attrColor;
+layout (location = 1) in vec3 attrNormal;
 uniform mat4 matrix;
 out vec3 vsColor;
+out vec3 vsNormal;
 void main()
 {
     gl_Position = matrix * vec4(attrPosition, 1.0);
     vsColor = vec3(1.0, 0.5, 0.0);
+    vsNormal = attrNormal;
 }      
 """
 
@@ -29,6 +31,7 @@ fragmentShader = """
 
 precision mediump float;
 in vec3 vsColor;
+in vec3 vsNormal;
 out vec4 FragColor;
   
 void main()
@@ -86,11 +89,11 @@ class WavefrontVisualiser:
         glDrawArrays(GL_TRIANGLES, 0, len(self.vertices)//3)
 
 
-def prepareDisplay():
+def startDisplay():
     glClearColor(0.0, 0.0, 0.0, 1.0)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
-def display():
+def endDisplay():
     glBindVertexArray(0)
     glUseProgram(0)
 
@@ -118,9 +121,9 @@ def main():
             if event.type == pygame.QUIT:
                 done = True
         tick += 1
-        prepareDisplay()
+        startDisplay()
         boxVisualizer.draw(shaderProgram, tick/60)
-        display()
+        endDisplay()
         pygame.display.flip()
         clock.tick(60)
 
