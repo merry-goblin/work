@@ -5,6 +5,7 @@ from OpenGL.GL import shaders
 from vecutils import *
 import ctypes
 import pygame
+import numpy as np
 import pywavefront
 
 
@@ -36,14 +37,13 @@ void main()
 }
 """
 
-
 class WavefrontVisualiser:
 
     def __init__(self, obj):
-	material = obj.materials['Material']
-        self.vertices = material.vertices
+        material = obj.materials['Material']
+        self.vertices = farray(material.vertices)
 
-    def declareVAO(self, shaderProgram):
+    def prepare(self, shaderProgram):
 
         self.vao = glGenVertexArrays(1)
         vbo = glGenBuffers(1)
@@ -52,17 +52,47 @@ class WavefrontVisualiser:
 
         # Bind the Vertex Buffer
         glBindBuffer(GL_ARRAY_BUFFER, vbo)
-        glBufferData(GL_ARRAY_BUFFER, ArrayDatatype.arrayByteCount(self.vertices), self.vertices, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, ArrayDatatype.arrayByteCount(self.vertices), self.vertices, GL_STATIC_DRAW)
 
         # Configure vertex attributes
 
         # - Position attribute
         attrPositionIndex = glGetAttribLocation(shaderProgram, 'attrPosition')
         if (attrPositionIndex != -1):
-            glVertexAttribPointer(0, NB_POSITION_AXES, GL_FLOAT, GL_FALSE, 3 * ctypes.sizeof(ctypes.c_float), ctypes.c_void_p(0));
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * ctypes.sizeof(ctypes.c_float), ctypes.c_void_p(5 * ctypes.sizeof(ctypes.c_float)))
             glEnableVertexAttribArray(0);
 
+        # Unbind the VAO
+        glBindVertexArray(0)
+    
+        # Unbind the VBO
+        glBindBuffer(GL_ARRAY_BUFFER, 0)
 
+    def draw(self, shaderProgram, time):
+
+        glUseProgram(shaderProgram)
+
+        pMatrix = PerspectiveMatrix(45, 1.0 * 800/600, 0.1, 100)
+
+        lMatrix = LookAtMatrix(vec3(-5.0, 0.0, 3.0), (0, 0, 0), (0, 0, 1))
+
+        # Matrix
+        objectMatrix = TranslationMatrix(sin(time), 0, 0) @ RotationMatrix(sin(time)*90, (1,1,1))
+        attrMatrixIndex = glGetUniformLocation(shaderProgram, 'matrix')
+        glUniformMatrix4fv(attrMatrixIndex, 1, True, pMatrix @ lMatrix @ objectMatrix)
+
+        glBindVertexArray(self.vao)
+        #glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, ctypes.c_void_p(0))
+        glDrawArrays(GL_TRIANGLES, 0, len(self.vertices)//3)
+
+
+def prepareDisplay():
+    glClearColor(0.0, 0.0, 0.0, 1.0)
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+
+def display():
+    glBindVertexArray(0)
+    glUseProgram(0)
 
 def main():
     pygame.init()
@@ -75,25 +105,10 @@ def main():
         shaders.compileShader(fragmentShader, GL_FRAGMENT_SHADER))
 
     box = pywavefront.Wavefront('data/box-T2F_N3F_V3F.obj')
-    boxVisualizer = new WavefrontVisualiser(box)
+    boxVisualizer = WavefrontVisualiser(box)
 
-    boxVisualizer.declareVAO(shaderProgram)
+    boxVisualizer.prepare(shaderProgram)
 
-material = scene.materials['Material']
-print(material.vertex_format)
-
-for name, material in scene.materials.items():
-    print(material.vertex_format)
-    
-    material.vertices
-    # Material properties
-    material.diffuse
-    material.ambient
-    material.texture
-
-    
-    VAO = createObject(shaderProgram, vertices1, indices1)
-    
     clock = pygame.time.Clock()
     
     done = False
@@ -104,7 +119,7 @@ for name, material in scene.materials.items():
                 done = True
         tick += 1
         prepareDisplay()
-        drawObject(shaderProgram, vertices1, VAO, tick/60)
+        boxVisualizer.draw(shaderProgram, tick/60)
         display()
         pygame.display.flip()
         clock.tick(60)
