@@ -8,35 +8,44 @@ import pygame
 import numpy as np
 import pywavefront
 
-
 vertexShader = """
 #version 300 es
-
 precision mediump float;
+
 layout (location = 0) in vec3 attrPosition;
 layout (location = 1) in vec3 attrNormal;
+layout (location = 2) in vec2 attrTexCoords;
+
 uniform mat4 matrix;
+
 out vec3 vsColor;
 out vec3 vsNormal;
+out vec2 vsTexCoords;
+
 void main()
 {
     gl_Position = matrix * vec4(attrPosition, 1.0);
     vsColor = vec3(1.0, 0.5, 0.0);
     vsNormal = attrNormal;
+    vsTexCoords = attrTexCoords;
 }      
 """
 
 fragmentShader = """
 #version 300 es
-
 precision mediump float;
+
 in vec3 vsColor;
 in vec3 vsNormal;
+in vec2 vsTexCoords;
+
+uniform sampler2D uTexture;
+
 out vec4 FragColor;
   
 void main()
 {
-    FragColor = vec4(vsColor, 1.0);
+    FragColor = texture(uTexture, vsTexCoords);
 }
 """
 
@@ -44,7 +53,10 @@ class WavefrontVisualiser:
 
     def __init__(self, obj):
         material = obj.materials['Material']
+        self.vertex_format = material.vertex_format
         self.vertices = farray(material.vertices)
+        self.texture = material.texture
+        self.uTexture = None
 
     def prepare(self, shaderProgram):
 
@@ -62,16 +74,43 @@ class WavefrontVisualiser:
         # - Position attribute
         attrPositionIndex = glGetAttribLocation(shaderProgram, 'attrPosition')
         if (attrPositionIndex != -1):
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * ctypes.sizeof(ctypes.c_float), ctypes.c_void_p(5 * ctypes.sizeof(ctypes.c_float)))
-            glEnableVertexAttribArray(0);
+            glVertexAttribPointer(attrPositionIndex, 3, GL_FLOAT, GL_FALSE, 8 * ctypes.sizeof(ctypes.c_float), ctypes.c_void_p(5 * ctypes.sizeof(ctypes.c_float)))
+            glEnableVertexAttribArray(attrPositionIndex);
+
+        # - Texture attribute
+        attrTexCoordIndex = glGetAttribLocation(shaderProgram, 'attrTexCoords')
+        if (attrTexCoordIndex != -1):
+            glVertexAttribPointer(attrTexCoordIndex, 2, GL_FLOAT, GL_FALSE, 8 * ctypes.sizeof(ctypes.c_float), ctypes.c_void_p(0));
+            glEnableVertexAttribArray(attrTexCoordIndex);
+
+        self.uTexture = glGenTextures(1)
+        glBindTexture(GL_TEXTURE_2D, self.uTexture)
+        # Set the texture wrapping parameters
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT) # Set texture wrapping to GL_REPEAT (default wrapping method)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
+        # Set texture filtering parameters
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+
+        image = pygame.image.load(self.texture.path).convert_alpha()
+        imageData = pygame.image.tostring(image, 'RGBA', 1)
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.get_width(), image.get_height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData)
+        glGenerateMipmap(GL_TEXTURE_2D)
 
         # Unbind the VAO
         glBindVertexArray(0)
-    
-        # Unbind the VBO
+        
+        # Unbind attribute buffer
         glBindBuffer(GL_ARRAY_BUFFER, 0)
+        if (attrPositionIndex != -1):
+            glDisableVertexAttribArray(attrPositionIndex)
+        if (attrTexCoordIndex != -1):
+            glDisableVertexAttribArray(attrTexCoordIndex)
 
     def draw(self, shaderProgram, time):
+
+        glActiveTexture(GL_TEXTURE0)
+        glBindTexture(GL_TEXTURE_2D, self.uTexture)
 
         glUseProgram(shaderProgram)
 
