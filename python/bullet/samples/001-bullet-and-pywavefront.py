@@ -123,7 +123,7 @@ class WavefrontVisualiser:
 
         pMatrix = PerspectiveMatrix(45, 1.0 * 800/600, 0.1, 100)
 
-        lMatrix = LookAtMatrix(vec3(-8.0, 0.0, 3.0), (0, 0, 0), (0, 0, 1))
+        lMatrix = LookAtMatrix(vec3(-10.0, 10.0, 10.0), (0, 0, 2), (0, 0, 1))
 
         # Matrix
         #objectMatrix = TranslationMatrix(sin(time), 0, 0) @ RotationMatrix(sin(time)*90, (1,1,1))
@@ -161,7 +161,7 @@ def main():
         shaders.compileShader(vertexShader, GL_VERTEX_SHADER),
         shaders.compileShader(fragmentShader, GL_FRAGMENT_SHADER))
 
-    boxPos = [0.0, 0.0, 5.0]
+    boxPos = [0.0, 0.0, 18.0]
     boxOrn = None
     box = pywavefront.Wavefront('data/box-T2F_N3F_V3F.obj')
     boxVisualizer = WavefrontVisualiser(box, boxPos, boxOrn)
