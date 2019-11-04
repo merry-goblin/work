@@ -155,9 +155,22 @@ class WavefrontVisualiser:
 
         lMatrix = LookAtMatrix(vec3(-10.0, 10.0, 10.0), (0, 0, 2), (0, 0, 1))
 
+        xOrn = 0
+        yOrn = 0
+        zOrn = 0
+        if self.orn is not None:
+            orn = p.getEulerFromQuaternion(self.orn)
+            xOrn = degrees(orn[0])
+            yOrn = degrees(orn[1])
+            zOrn = degrees(orn[2])
+
+        #orn = p.getEulerFromQuaternion(self.orn)
+        #orn = p.getEulerFromQuaternion(self.orn)
+        #xOrn = degrees(orn[0])
+    
         # Matrix
         #objectMatrix = TranslationMatrix(sin(time), 0, 0) @ RotationMatrix(sin(time)*90, (1,1,1))
-        objectMatrix = TranslationMatrix(self.pos) @ RotationMatrix(self.orn)
+        objectMatrix = TranslationMatrix(self.pos) @ RotationMatrix(yOrn, (0,1,0)) @ RotationMatrix(zOrn, (0,0,1)) @ RotationMatrix(xOrn, (1,0,0)) #@ p.getMatrixFromQuaternion(self.orn)
         attrMatrixIndex = glGetUniformLocation(shaderProgram, 'matrix')
         glUniformMatrix4fv(attrMatrixIndex, 1, True, pMatrix @ lMatrix @ objectMatrix)
 
@@ -191,7 +204,7 @@ def main():
         shaders.compileShader(fragmentShader, GL_FRAGMENT_SHADER))
 
     boxPos = [0.0, 0.0, 18.0]
-    boxOrn = [0.0, 0.2, 0.5, 1.0]
+    boxOrn = p.getQuaternionFromEuler([0.5,0.2,1.25])
     planePos = [0.0, 0.0, 0.0]
     planeOrn = None
     box = pywavefront.Wavefront('data/box-T2F_N3F_V3F.obj')
@@ -216,6 +229,7 @@ def main():
                                baseInertialFramePosition=[0, 0, 0],
                                baseCollisionShapeIndex=collisionBoxId,
                                basePosition=boxPos,
+                               baseOrientation=boxOrn,
                                useMaximalCoordinates=True)
     collisionPlaneId = p.createCollisionShape(shapeType=p.GEOM_MESH,
                                               fileName="data/plane.obj",
@@ -226,6 +240,8 @@ def main():
                                baseCollisionShapeIndex=collisionPlaneId,
                                basePosition=planePos,
                                useMaximalCoordinates=True)
+
+    boxPos, boxOrn = p.getBasePositionAndOrientation(boxId)
 
     clock = pygame.time.Clock()
     done  = False
