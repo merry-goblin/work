@@ -153,24 +153,17 @@ class WavefrontVisualiser:
 
         pMatrix = PerspectiveMatrix(45, 1.0 * 800/600, 0.1, 100)
 
-        lMatrix = LookAtMatrix(vec3(-10.0, 10.0, 10.0), (0, 0, 2), (0, 0, 1))
+        lMatrix = LookAtMatrix(vec3(-12.0, 12.0, 10.0), (0, 0, 2), (0, 0, 1))
 
-        xOrn = 0
-        yOrn = 0
-        zOrn = 0
         if self.orn is not None:
-            orn = p.getEulerFromQuaternion(self.orn)
-            xOrn = degrees(orn[0])
-            yOrn = degrees(orn[1])
-            zOrn = degrees(orn[2])
+            orn9x1Matrix = p.getMatrixFromQuaternion(self.orn)
+            orn4x4Matrix = getA4x4Matrix4WithA9x1Matrix(orn9x1Matrix)
+        else:
+            orn4x4Matrix = IdentityMatrix()
 
-        #orn = p.getEulerFromQuaternion(self.orn)
-        #orn = p.getEulerFromQuaternion(self.orn)
-        #xOrn = degrees(orn[0])
-    
         # Matrix
         #objectMatrix = TranslationMatrix(sin(time), 0, 0) @ RotationMatrix(sin(time)*90, (1,1,1))
-        objectMatrix = TranslationMatrix(self.pos) @ RotationMatrix(yOrn, (0,1,0)) @ RotationMatrix(zOrn, (0,0,1)) @ RotationMatrix(xOrn, (1,0,0)) #@ p.getMatrixFromQuaternion(self.orn)
+        objectMatrix = TranslationMatrix(self.pos) @ orn4x4Matrix
         attrMatrixIndex = glGetUniformLocation(shaderProgram, 'matrix')
         glUniformMatrix4fv(attrMatrixIndex, 1, True, pMatrix @ lMatrix @ objectMatrix)
 
@@ -246,11 +239,24 @@ def main():
     clock = pygame.time.Clock()
     done  = False
     tick  = 0
+    applyForce = False
+    force = (0,0,100)
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
+            elif event.type == pygame.KEYDOWN :
+                if event.key == pygame.K_SPACE :
+                    applyForce = True
         tick += 1
+
+        if (applyForce) :
+            applyForce = False
+            p.applyExternalForce(objectUniqueId=boxId, 
+                                 linkIndex=-1,
+                                 forceObj=force, 
+                                 posObj=boxPos,
+                                 flags=p.LINK_FRAME)
 
         p.stepSimulation()
         boxPos, boxOrn = p.getBasePositionAndOrientation(boxId)
