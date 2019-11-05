@@ -80,7 +80,7 @@ def main():
     boxPos = [0.0, 0.0, 18.0]
     boxOrn = p.getQuaternionFromEuler([0.5,0.2,1.25])
     planePos = [0.0, 0.0, 0.0]
-    planeOrn = None
+    planeOrn = p.getQuaternionFromEuler([0.0,0.0,0.0])
     box = pywavefront.Wavefront('data/box-T2F_N3F_V3F.obj')
     boxVisualizer = WavefrontVisualiser(box, boxPos, boxOrn)
     plane = pywavefront.Wavefront('data/plane.obj')
@@ -109,10 +109,12 @@ def main():
                                               fileName="data/plane.obj",
                                               collisionFramePosition=shift,
                                               meshScale=meshScale)
+
     planeId = p.createMultiBody(baseMass=1,
                                baseInertialFramePosition=[0, 0, 0],
                                baseCollisionShapeIndex=collisionPlaneId,
                                basePosition=planePos,
+                               baseOrientation=planeOrn,
                                useMaximalCoordinates=True)
 
     boxPos, boxOrn = p.getBasePositionAndOrientation(boxId)
