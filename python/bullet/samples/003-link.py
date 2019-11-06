@@ -10,7 +10,6 @@ import pywavefront
 import pybullet as p
 from pyengine import WavefrontVisualiser
 
-
 vertexShader = """
 #version 300 es
 precision mediump float;
@@ -79,22 +78,27 @@ def main():
 
     boxPos = [0.0, 0.0, 18.0]
     boxOrn = p.getQuaternionFromEuler([0.5,0.2,1.25])
+    boxPos2 = [0.0, 0.0, 4.0]
+    boxOrn2 = p.getQuaternionFromEuler([0.0,0.0,0])
     planePos = [0.0, 0.0, 0.0]
     planeOrn = p.getQuaternionFromEuler([0.0,0.0,0.0])
     box = pywavefront.Wavefront('data/box-T2F_N3F_V3F.obj')
     boxVisualizer = WavefrontVisualiser(box, boxPos, boxOrn)
+    box2 = pywavefront.Wavefront('data/box-T2F_N3F_V3F.obj')
+    box2Visualizer = WavefrontVisualiser(box2, boxPos2, boxOrn2)
     plane = pywavefront.Wavefront('data/plane.obj')
     planeVisualizer = WavefrontVisualiser(plane, planePos, planeOrn)
 
     boxVisualizer.prepare(shaderProgram)
+    box2Visualizer.prepare(shaderProgram)
     planeVisualizer.prepare(shaderProgram)
 
     initPyBullet()
 
-    planeId = p.loadURDF("data/plane.urdf")
-
     shift     = [0.0, 0.0, 0.0]
     meshScale = [1.0, 1.0, 1.0]
+
+    # Box 1
     collisionBoxId = p.createCollisionShape(shapeType=p.GEOM_MESH,
                                               fileName="data/box-T2F_N3F_V3F.obj",
                                               collisionFramePosition=shift,
@@ -105,19 +109,53 @@ def main():
                                basePosition=boxPos,
                                baseOrientation=boxOrn,
                                useMaximalCoordinates=True)
+
+    # Box 2
+    linkMasses = [1]
+    linkCollisionShapeIndices = [boxId]
+    linkVisualShapeIndices = [-1]
+    linkPositions = [[0, 0, 0]]
+    linkOrientations = [[0, 0, 0, 1]]
+    linkInertialFramePositions = [[0, 0, 0]]
+    linkInertialFrameOrientations = [[0, 0, 0, 1]]
+    indices = [0]
+    jointTypes = [p.JOINT_REVOLUTE]
+    axis = [[1, 0, 0]]
+
+    collisionBox2Id = p.createCollisionShape(shapeType=p.GEOM_MESH,
+                                              fileName="data/box-T2F_N3F_V3F.obj",
+                                              collisionFramePosition=shift,
+                                              meshScale=meshScale)
+    box2Id = p.createMultiBody(baseMass=1,
+                               baseInertialFramePosition=[0, 0, 0],
+                               baseCollisionShapeIndex=collisionBox2Id,
+                               basePosition=boxPos2,
+                               baseOrientation=boxOrn2,
+                               useMaximalCoordinates=True,
+                               linkMasses=linkMasses,
+                               linkCollisionShapeIndices=linkCollisionShapeIndices,
+                               linkVisualShapeIndices=linkVisualShapeIndices,
+                               linkPositions=linkPositions,
+                               linkOrientations=linkOrientations,
+                               linkInertialFramePositions=linkInertialFramePositions,
+                               linkInertialFrameOrientations=linkInertialFrameOrientations,
+                               linkParentIndices=indices,
+                               linkJointTypes=jointTypes,
+                               linkJointAxis=axis)
+
+    # Plane
     collisionPlaneId = p.createCollisionShape(shapeType=p.GEOM_MESH,
                                               fileName="data/plane.obj",
                                               collisionFramePosition=shift,
                                               meshScale=meshScale)
 
-    planeId = p.createMultiBody(baseMass=1,
+    planeId = p.createMultiBody(baseMass=0,
                                baseInertialFramePosition=[0, 0, 0],
                                baseCollisionShapeIndex=collisionPlaneId,
                                basePosition=planePos,
                                baseOrientation=planeOrn,
                                useMaximalCoordinates=True)
 
-    boxPos, boxOrn = p.getBasePositionAndOrientation(boxId)
 
     clock = pygame.time.Clock()
     done  = False
@@ -146,8 +184,14 @@ def main():
 
         boxPos, boxOrn = p.getBasePositionAndOrientation(boxId)
         boxVisualizer.updatePosAndOrn(boxPos, boxOrn)
+        boxPos2, boxOrn2 = p.getBasePositionAndOrientation(box2Id)
+        box2Visualizer.updatePosAndOrn(boxPos2, boxOrn2)
+        planePos, planeOrn = p.getBasePositionAndOrientation(planeId)
+        planeVisualizer.updatePosAndOrn(planePos, planeOrn)
+
         startDisplay()
         boxVisualizer.draw(shaderProgram, tick/60)
+        box2Visualizer.draw(shaderProgram, tick/60)
         planeVisualizer.draw(shaderProgram, tick/60)
         endDisplay()
         pygame.display.flip()
