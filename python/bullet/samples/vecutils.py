@@ -301,7 +301,7 @@ def IdentityMatrix():
         [0, 0, 0, 1]
     ])
 
-def getA4x4Matrix4WithA9x1Matrix(vec9):
+def getA4x4MatrixWithA9x1Matrix(vec9):
 
     return farray([
         [vec9[0], vec9[1], vec9[2], 0],

@@ -122,7 +122,7 @@ class WavefrontVisualiser:
 
         if self.orn is not None:
             orn9x1Matrix = p.getMatrixFromQuaternion(self.orn)
-            orn4x4Matrix = getA4x4Matrix4WithA9x1Matrix(orn9x1Matrix)
+            orn4x4Matrix = getA4x4MatrixWithA9x1Matrix(orn9x1Matrix)
         else:
             orn4x4Matrix = IdentityMatrix()
 
