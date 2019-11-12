@@ -61,6 +61,8 @@ sphereUid = p.createMultiBody(mass,
 p.setGravity(0, 0, -10)
 p.setRealTimeSimulation(0)
 
+print(p.getNumJoints(sphereUid))
+
 dt = 1. / 240.
 while (1):
   p.stepSimulation()

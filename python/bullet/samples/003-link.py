@@ -91,8 +91,9 @@ def main():
     box2Visualizer.prepare(shaderProgram)
     planeVisualizer.prepare(shaderProgram)
 
-    shift     = [0.0, 0.0, 0.0]
-    meshScale = [1.0, 1.0, 1.0]
+    shift        = [0.0, 0.0, 0.0]
+    meshScale    = [1.0, 1.0, 1.0]
+    sphereRadius = 1
 
     initPyBullet()
 
@@ -110,14 +111,14 @@ def main():
                                useMaximalCoordinates=True)
 
     # Box 1
+
     collisionBoxId = p.createCollisionShape(shapeType=p.GEOM_MESH,
                                               fileName="data/box-T2F_N3F_V3F.obj",
                                               collisionFramePosition=shift,
                                               meshScale=meshScale)
-    collisionBox2Id = p.createCollisionShape(shapeType=p.GEOM_MESH,
-                                              fileName="data/box-T2F_N3F_V3F.obj",
-                                              collisionFramePosition=shift,
-                                              meshScale=meshScale)
+
+    collisionBox2Id = p.createCollisionShape(p.GEOM_BOX, 
+                                             halfExtents=[sphereRadius, sphereRadius, sphereRadius])
     """
     linkMasses = []
     linkCollisionShapeIndices = []
@@ -159,7 +160,7 @@ def main():
       linkMasses.append(1)
       linkCollisionShapeIndices.append(collisionBox2Id)
       linkVisualShapeIndices.append(-1)
-      linkPositions.append([0, 2.0 + 0.01, 0])
+      linkPositions.append([0, 3, 0])
       linkOrientations.append([0, 0, 0, 1])
       linkInertialFramePositions.append([0, 0, 0])
       linkInertialFrameOrientations.append([0, 0, 0, 1])
@@ -168,7 +169,7 @@ def main():
       axis.append([0, 0, 1])
 
     boxId = p.createMultiBody(mass,
-                              collisionBoxId,
+                              collisionBox2Id,
                               visualShapeId,
                               boxPos,
                               boxOrn,
@@ -216,6 +217,8 @@ def main():
 
     p.setGravity(0, 0, -9.81)
     p.setRealTimeSimulation(0)
+
+    print(p.getNumJoints(boxId))
 
     clock = pygame.time.Clock()
     done  = False
