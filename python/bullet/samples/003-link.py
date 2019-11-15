@@ -10,6 +10,8 @@ import pywavefront
 import pybullet as p
 from pyengine import WavefrontVisualiser
 
+
+
 vertexShader = """
 #version 300 es
 precision mediump float;
@@ -60,9 +62,14 @@ def endDisplay():
     glUseProgram(0)
 
 def initPyBullet():
-    p.connect(p.DIRECT)
-    p.setPhysicsEngineParameter(numSolverIterations=10)
+    physicsClientId = p.connect(p.DIRECT)
+    p.resetSimulation()
+    #p.setPhysicsEngineParameter(numSolverIterations=10)
     p.setTimeStep(1. / 240.)
+    p.setGravity(0, 0, -9.81)
+    p.setRealTimeSimulation(0)
+
+    return physicsClientId
 
 def main():
     pygame.init()
@@ -74,7 +81,7 @@ def main():
         shaders.compileShader(vertexShader, GL_VERTEX_SHADER),
         shaders.compileShader(fragmentShader, GL_FRAGMENT_SHADER))
 
-    boxPos = [0.0, 0.0, 18.0]
+    boxPos = [0.0, 0.0, 5.0]
     boxOrn = p.getQuaternionFromEuler([0.5,0.2,1.25])
     boxPos2 = [0.0, 0.0, 4.0]
     boxOrn2 = p.getQuaternionFromEuler([0.0,0.0,0])
@@ -95,7 +102,7 @@ def main():
     meshScale    = [1.0, 1.0, 1.0]
     sphereRadius = 1
 
-    initPyBullet()
+    physicsClientId = initPyBullet()
 
     # Plane
     collisionPlaneId = p.createCollisionShape(shapeType=p.GEOM_MESH,
@@ -157,7 +164,7 @@ def main():
     axis = []
 
     for i in range(6):
-      linkMasses.append(1)
+      linkMasses.append(0)
       linkCollisionShapeIndices.append(collisionBox2Id)
       linkVisualShapeIndices.append(-1)
       linkPositions.append([0, 3, 0])
@@ -166,7 +173,7 @@ def main():
       linkInertialFrameOrientations.append([0, 0, 0, 1])
       indices.append(i)
       jointTypes.append(p.JOINT_REVOLUTE)
-      axis.append([0, 0, 1])
+      axis.append([1, 0, 0])
 
     boxId = p.createMultiBody(mass,
                               collisionBox2Id,
@@ -214,11 +221,6 @@ def main():
                               linkJointAxis=axis,
                               useMaximalCoordinates=True)
     """
-
-    p.setGravity(0, 0, -9.81)
-    p.setRealTimeSimulation(0)
-
-    print(p.getNumJoints(boxId))
 
     clock = pygame.time.Clock()
     done  = False

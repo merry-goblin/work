@@ -6,14 +6,20 @@ from OpenGL.GL import *
 from vecutils import *
 farray = float32
 
-class ObjectManager:
+class URDFManager:
 
-    def __init__(self, file, pos, orn):
+    def __init__(self, physicsClientId):
+        self.physicsClientId = physicsClientId
+        self.visualShapes = []
+
+    def add(self, file, pos, orn):
         self.file = file
         self.pos = pos
         self.orn = orn
+        
+        multiBodyId = p.loadURDF(file)
+        return multiBodyId
 
-    
 
 class WavefrontVisualiser:
 
