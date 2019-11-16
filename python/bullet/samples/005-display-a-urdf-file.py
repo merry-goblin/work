@@ -81,7 +81,6 @@ def main():
         shaders.compileShader(vertexShader, GL_VERTEX_SHADER),
         shaders.compileShader(fragmentShader, GL_FRAGMENT_SHADER))
 
-
     boxPos = [0.0, 0.0, 5.0]
     boxOrn = p.getQuaternionFromEuler([0.5,0.2,1.25])
     planePos = [0.0, 0.0, 0.0]
@@ -91,7 +90,7 @@ def main():
     #r2d2 = p.loadURDF("data/r2d2/r2d2.urdf")
 
     objectManager = URDFManager(physicsClientId)
-    planeId = objectManager.add("data/plane.urdf", planePos, planeOrn)
+    boxId = objectManager.add("data/box.urdf", planePos, planeOrn)
 
 
 

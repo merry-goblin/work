@@ -11,15 +11,31 @@ class URDFManager:
     def __init__(self, physicsClientId):
         self.physicsClientId = physicsClientId
         self.visualShapes = []
-
+ 
     def add(self, file, pos, orn):
         self.file = file
         self.pos = pos
         self.orn = orn
         
         multiBodyId = p.loadURDF(file)
+        self.visualShapes[multiBodyId] = []
+        self.storeVisualShapes(multiBodyId, pos, orn)
+
         return multiBodyId
 
+    def storeVisualShapes(self, multiBodyId, pos, orn):
+        visualShapes = p.getVisualShapeData(multiBodyId)
+        for visualShape in visualShapes:
+
+            visualId = visualShape[0]
+            visualType = visualShape[2]
+            if (visualType == p.GEOM_MESH):
+                wavefrontData = pywavefront.Wavefront('data/box-T2F_N3F_V3F.obj')
+                wavefrontVisualizer = WavefrontVisualiser(wavefrontData, pos, orn)
+                self.visualShapes[multiBodyId][visualId] = wavefrontVisualizer
+
+    def getVisualShapes(self, multiBodyId):
+        return self.visualShapes[multiBodyId]
 
 class WavefrontVisualiser:
 
