@@ -1,6 +1,7 @@
 
 import pygame
 import pybullet as p
+import pywavefront
 from numpy import float32
 from OpenGL.GL import *
 from vecutils import *
@@ -10,7 +11,7 @@ class URDFManager:
 
     def __init__(self, physicsClientId):
         self.physicsClientId = physicsClientId
-        self.visualShapes = []
+        self.visualShapes = {}
  
     def add(self, file, pos, orn):
         self.file = file
@@ -18,7 +19,7 @@ class URDFManager:
         self.orn = orn
         
         multiBodyId = p.loadURDF(file)
-        self.visualShapes[multiBodyId] = []
+        self.visualShapes[multiBodyId] = {}
         self.storeVisualShapes(multiBodyId, pos, orn)
 
         return multiBodyId
@@ -131,7 +132,7 @@ class WavefrontVisualiser:
         if (attrTexCoordIndex != -1):
             glDisableVertexAttribArray(attrTexCoordIndex)
 
-    def draw(self, shaderProgram, time):
+    def draw(self, shaderProgram, time=None):
 
         glActiveTexture(GL_TEXTURE0)
         glBindTexture(GL_TEXTURE_2D, self.uTexture)

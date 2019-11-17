@@ -6,7 +6,6 @@ from vecutils import *
 import ctypes
 import pygame
 import numpy as np
-import pywavefront
 import pybullet as p
 from pyengine import *
 
@@ -62,7 +61,7 @@ def endDisplay():
     glUseProgram(0)
 
 def initPyBullet():
-    physicsClientId = p.connect(p.GUI)
+    physicsClientId = p.connect(p.DIRECT)
     p.resetSimulation()
     #p.setPhysicsEngineParameter(numSolverIterations=10)
     p.setTimeStep(1. / 240.)
@@ -87,12 +86,15 @@ def main():
     planeOrn = p.getQuaternionFromEuler([0.0,0.0,0.0])
 
     physicsClientId = initPyBullet()
+    planeId = p.loadURDF("data/plane.urdf")
     #r2d2 = p.loadURDF("data/r2d2/r2d2.urdf")
 
     objectManager = URDFManager(physicsClientId)
     boxId = objectManager.add("data/box.urdf", planePos, planeOrn)
 
-
+    shapes = objectManager.getVisualShapes(boxId)
+    for key, visualShape in shapes.items():
+        visualShape.prepare(shaderProgram)
 
 
     """
@@ -112,7 +114,7 @@ def main():
         print(vs)
         i += 1
     """
-    
+
     clock = pygame.time.Clock()
     done  = False
     tick  = 0
@@ -137,7 +139,12 @@ def main():
                                  posObj=forcePos,
                                  flags=p.LINK_FRAME)
 
-        #boxPos, boxOrn = p.getBasePositionAndOrientation(boxId)
+        boxPos, boxOrn = p.getBasePositionAndOrientation(boxId)
+        shapes = objectManager.getVisualShapes(boxId)
+        for key, visualShape in shapes.items():
+            visualShape.updatePosAndOrn(boxPos, boxOrn)
+            visualShape.draw(shaderProgram)
+
         #boxVisualizer.updatePosAndOrn(boxPos, boxOrn)
         #boxPos2, boxOrn2 = p.getBasePositionAndOrientation(box2Id)
         #box2Visualizer.updatePosAndOrn(boxPos2, boxOrn2)
