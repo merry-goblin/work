@@ -64,7 +64,7 @@ def initPyBullet():
     physicsClientId = p.connect(p.DIRECT)
     p.resetSimulation()
     #p.setPhysicsEngineParameter(numSolverIterations=10)
-    p.setTimeStep(1. / 240.)
+    p.setTimeStep(1. / 60.)
     p.setGravity(0, 0, -9.81)
     p.setRealTimeSimulation(0)
 
@@ -86,16 +86,18 @@ def main():
     planeOrn = p.getQuaternionFromEuler([0.0,0.0,0.0])
 
     physicsClientId = initPyBullet()
-    planeId = p.loadURDF("data/plane.urdf")
-    #r2d2 = p.loadURDF("data/r2d2/r2d2.urdf")
 
     objectManager = URDFManager(physicsClientId)
-    boxId = objectManager.add("data/box.urdf", planePos, planeOrn)
+    planeId = objectManager.add("data/plane.urdf", planePos, planeOrn)
+    boxId = objectManager.add("data/box.urdf", boxPos, boxOrn)
+
+    shapes = objectManager.getVisualShapes(planeId)
+    for key, visualShape in shapes.items():
+        visualShape.prepare(shaderProgram)
 
     shapes = objectManager.getVisualShapes(boxId)
     for key, visualShape in shapes.items():
         visualShape.prepare(shaderProgram)
-
 
     """
     for i in range(p.getNumJoints(r2d2)):
@@ -129,7 +131,6 @@ def main():
                     applyForce = True
         tick += 1
 
-        p.stepSimulation()
         if (applyForce) :
             applyForce = False
             forcePos = [0.0, 0.0, 0.0]
@@ -139,25 +140,26 @@ def main():
                                  posObj=forcePos,
                                  flags=p.LINK_FRAME)
 
+        startDisplay()
+
+        shapes = objectManager.getVisualShapes(planeId)
+        for key, visualShape in shapes.items():
+            #visualShape.updatePosAndOrn(planePos, planeOrn)
+            visualShape.draw(shaderProgram)
+
         boxPos, boxOrn = p.getBasePositionAndOrientation(boxId)
         shapes = objectManager.getVisualShapes(boxId)
         for key, visualShape in shapes.items():
             visualShape.updatePosAndOrn(boxPos, boxOrn)
             visualShape.draw(shaderProgram)
 
-        #boxVisualizer.updatePosAndOrn(boxPos, boxOrn)
-        #boxPos2, boxOrn2 = p.getBasePositionAndOrientation(box2Id)
-        #box2Visualizer.updatePosAndOrn(boxPos2, boxOrn2)
-        #planePos, planeOrn = p.getBasePositionAndOrientation(planeId)
-        #planeVisualizer.updatePosAndOrn(planePos, planeOrn)
+        endDisplay()
 
-        #startDisplay()
-        #boxVisualizer.draw(shaderProgram, tick/60)
-        #box2Visualizer.draw(shaderProgram, tick/60)
-        #planeVisualizer.draw(shaderProgram, tick/60)
-        #endDisplay()
+        p.stepSimulation()
+
         pygame.display.flip()
-        clock.tick(240)
+        clock.tick(60)
+
 
 if __name__ == '__main__':
     try:

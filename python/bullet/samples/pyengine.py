@@ -18,7 +18,7 @@ class URDFManager:
         self.pos = pos
         self.orn = orn
         
-        multiBodyId = p.loadURDF(file)
+        multiBodyId = p.loadURDF(file, pos, orn)
         self.visualShapes[multiBodyId] = {}
         self.storeVisualShapes(multiBodyId, pos, orn)
 
@@ -30,8 +30,10 @@ class URDFManager:
 
             visualId = visualShape[0]
             visualType = visualShape[2]
+            meshPath = visualShape[4]
             if (visualType == p.GEOM_MESH):
-                wavefrontData = pywavefront.Wavefront('data/box-T2F_N3F_V3F.obj')
+                meshPath = meshPath.decode("utf-8")
+                wavefrontData = pywavefront.Wavefront(meshPath)
                 wavefrontVisualizer = WavefrontVisualiser(wavefrontData, pos, orn)
                 self.visualShapes[multiBodyId][visualId] = wavefrontVisualizer
 
