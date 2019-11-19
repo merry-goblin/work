@@ -72,7 +72,7 @@ def initPyBullet():
 
 def main():
     pygame.init()
-    screen = pygame.display.set_mode((800, 420), pygame.OPENGL|pygame.DOUBLEBUF)
+    screen = pygame.display.set_mode((800, 480), pygame.OPENGL|pygame.DOUBLEBUF)
 
     glEnable(GL_DEPTH_TEST)
 
