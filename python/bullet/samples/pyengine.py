@@ -152,7 +152,7 @@ class WavefrontVisualiser:
 
         glUseProgram(shaderProgram)
 
-        pMatrix = PerspectiveMatrix(45, 1.0 * 800/600, 0.1, 100)
+        pMatrix = PerspectiveMatrix(45, 1.0 * 800/480, 0.1, 100)
 
         lMatrix = LookAtMatrix(vec3(12.0, -12.0, 10.0), (0, 0, 2), (0, 0, 1))
 
