@@ -7,6 +7,14 @@ from OpenGL.GL import *
 from vecutils import *
 farray = float32
 
+class VisualShape:
+
+    def __init__(self, id, visualizer, pos, orn):
+        self.id = id # linkIndex
+        self.vs = visualizer
+        self.pos = pos
+        self.orn = orn
+
 class URDFManager:
 
     def __init__(self, physicsClientId):
@@ -27,15 +35,18 @@ class URDFManager:
     def storeVisualShapes(self, multiBodyId, pos, orn):
         visualShapes = p.getVisualShapeData(multiBodyId)
         for visualShape in visualShapes:
-
-            visualId = visualShape[0]
+            linkIndex = visualShape[1]
             visualType = visualShape[2]
             meshPath = visualShape[4]
+            pos = visualShape[5]
+            orn = visualShape[6]
             if (visualType == p.GEOM_MESH):
                 meshPath = meshPath.decode("utf-8")
                 wavefrontData = pywavefront.Wavefront(meshPath)
                 wavefrontVisualizer = WavefrontVisualiser(wavefrontData, pos, orn)
-                self.visualShapes[multiBodyId][visualId] = wavefrontVisualizer
+                self.visualShapes[multiBodyId][linkIndex] = VisualShape(linkIndex, wavefrontVisualizer, pos, orn)
+
+            
 
     def getVisualShapes(self, multiBodyId):
         return self.visualShapes[multiBodyId]
@@ -143,7 +154,7 @@ class WavefrontVisualiser:
 
         pMatrix = PerspectiveMatrix(45, 1.0 * 800/600, 0.1, 100)
 
-        lMatrix = LookAtMatrix(vec3(-12.0, 12.0, 10.0), (0, 0, 2), (0, 0, 1))
+        lMatrix = LookAtMatrix(vec3(12.0, -12.0, 10.0), (0, 0, 2), (0, 0, 1))
 
         if self.orn is not None:
             orn9x1Matrix = p.getMatrixFromQuaternion(self.orn)

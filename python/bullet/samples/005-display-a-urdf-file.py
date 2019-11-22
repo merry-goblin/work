@@ -61,7 +61,7 @@ def endDisplay():
     glUseProgram(0)
 
 def initPyBullet():
-    physicsClientId = p.connect(p.DIRECT)
+    physicsClientId = p.connect(p.GUI)
     p.resetSimulation()
     #p.setPhysicsEngineParameter(numSolverIterations=10)
     p.setTimeStep(1. / 60.)
@@ -81,7 +81,7 @@ def main():
         shaders.compileShader(fragmentShader, GL_FRAGMENT_SHADER))
 
     boxPos = [0.0, 0.0, 5.0]
-    boxOrn = p.getQuaternionFromEuler([0.5,0.2,1.25])
+    boxOrn = p.getQuaternionFromEuler([0.0,0.0,0.0])
     planePos = [0.0, 0.0, 0.0]
     planeOrn = p.getQuaternionFromEuler([0.0,0.0,0.0])
 
@@ -93,11 +93,11 @@ def main():
 
     shapes = objectManager.getVisualShapes(planeId)
     for key, visualShape in shapes.items():
-        visualShape.prepare(shaderProgram)
+        visualShape.vs.prepare(shaderProgram)
 
     shapes = objectManager.getVisualShapes(boxId)
     for key, visualShape in shapes.items():
-        visualShape.prepare(shaderProgram)
+        visualShape.vs.prepare(shaderProgram)
 
     """
     for i in range(p.getNumJoints(r2d2)):
@@ -145,13 +145,23 @@ def main():
         shapes = objectManager.getVisualShapes(planeId)
         for key, visualShape in shapes.items():
             #visualShape.updatePosAndOrn(planePos, planeOrn)
-            visualShape.draw(shaderProgram)
+            visualShape.vs.draw(shaderProgram)
 
         boxPos, boxOrn = p.getBasePositionAndOrientation(boxId)
         shapes = objectManager.getVisualShapes(boxId)
         for key, visualShape in shapes.items():
-            visualShape.updatePosAndOrn(boxPos, boxOrn)
-            visualShape.draw(shaderProgram)
+            if (key != -1):
+                linkState = p.getLinkState(boxId, key)
+                linkPos = linkState[0]
+                linkOrn = linkState[1]
+            else:
+                linkPos = boxPos
+                linkOrn = boxOrn
+            pos = [visualShape.pos[0] + linkPos[0], visualShape.pos[1] + linkPos[1], visualShape.pos[2] + linkPos[2]]
+            orn = [visualShape.orn[0] + linkOrn[0], visualShape.orn[1] + linkOrn[1], visualShape.orn[2] + linkOrn[2]]
+            orn = linkOrn
+            visualShape.vs.updatePosAndOrn(pos, boxOrn)
+            visualShape.vs.draw(shaderProgram)
 
         endDisplay()
 
