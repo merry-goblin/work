@@ -38,15 +38,13 @@ class URDFManager:
             linkIndex = visualShape[1]
             visualType = visualShape[2]
             meshPath = visualShape[4]
-            pos = visualShape[5]
-            orn = visualShape[6]
+            pos = TranslationMatrix(visualShape[5])
+            orn = getOrnMatrixFromQuaternion(visualShape[6])
             if (visualType == p.GEOM_MESH):
                 meshPath = meshPath.decode("utf-8")
                 wavefrontData = pywavefront.Wavefront(meshPath)
                 wavefrontVisualizer = WavefrontVisualiser(wavefrontData, pos, orn)
                 self.visualShapes[multiBodyId][linkIndex] = VisualShape(linkIndex, wavefrontVisualizer, pos, orn)
-
-            
 
     def getVisualShapes(self, multiBodyId):
         return self.visualShapes[multiBodyId]
@@ -61,6 +59,8 @@ class WavefrontVisualiser:
         self.uTexture = None
         self.pos = pos
         self.orn = orn
+        if (orn is None):
+            self.orn = IdentityMatrix()
 
         if self.vertex_format == "T2F_N3F_V3F":
             self.initT2F_N3F_V3F()
@@ -156,15 +156,17 @@ class WavefrontVisualiser:
 
         lMatrix = LookAtMatrix(vec3(12.0, -12.0, 10.0), (0, 0, 2), (0, 0, 1))
 
+        """
         if self.orn is not None:
             orn9x1Matrix = p.getMatrixFromQuaternion(self.orn)
             orn4x4Matrix = getA4x4MatrixWithA9x1Matrix(orn9x1Matrix)
         else:
             orn4x4Matrix = IdentityMatrix()
+        """
 
         # Matrix
         #objectMatrix = TranslationMatrix(sin(time), 0, 0) @ RotationMatrix(sin(time)*90, (1,1,1))
-        objectMatrix = TranslationMatrix(self.pos) @ orn4x4Matrix
+        objectMatrix = self.pos @ self.orn
         attrMatrixIndex = glGetUniformLocation(shaderProgram, 'matrix')
         glUniformMatrix4fv(attrMatrixIndex, 1, True, pMatrix @ lMatrix @ objectMatrix)
 

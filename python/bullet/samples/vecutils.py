@@ -4,8 +4,10 @@ from math import sin, cos, degrees, radians, tan
 
 import numpy
 import numpy as np
+import pybullet as p
 from numpy import array, matrix, linalg
 from numpy import float32
+
 farray = float32
 
 def fvec(*args):
@@ -310,3 +312,8 @@ def getA4x4MatrixWithA9x1Matrix(vec9):
         [0, 0, 0, 1]
     ])
 
+def getOrnMatrixFromQuaternion(quat):
+    orn9x1Matrix = p.getMatrixFromQuaternion(quat)
+    orn4x4Matrix = getA4x4MatrixWithA9x1Matrix(orn9x1Matrix)
+
+    return orn4x4Matrix

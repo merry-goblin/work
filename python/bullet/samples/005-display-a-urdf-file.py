@@ -147,20 +147,26 @@ def main():
             #visualShape.updatePosAndOrn(planePos, planeOrn)
             visualShape.vs.draw(shaderProgram)
 
-        boxPos, boxOrn = p.getBasePositionAndOrientation(boxId)
+        quatBoxPos, quatBoxOrn = p.getBasePositionAndOrientation(boxId)
+        boxPos = TranslationMatrix(quatBoxPos)
+        boxOrn = getOrnMatrixFromQuaternion(quatBoxOrn)
         shapes = objectManager.getVisualShapes(boxId)
         for key, visualShape in shapes.items():
             if (key != -1):
                 linkState = p.getLinkState(boxId, key)
-                linkPos = linkState[0]
-                linkOrn = linkState[1]
+                quatLinkPos = linkState[0]
+                quatLinkOrn = linkState[1]
+                linkPos = TranslationMatrix(quatLinkPos)
+                linkOrn = getOrnMatrixFromQuaternion(quatLinkOrn)
+                visualShapePos = linkOrn @ visualShape.pos
+                visualShapePos = TranslationMatrix(visualShapePos[0][3], visualShapePos[1][3], visualShapePos[2][3])
             else:
                 linkPos = boxPos
                 linkOrn = boxOrn
-            pos = [visualShape.pos[0] + linkPos[0], visualShape.pos[1] + linkPos[1], visualShape.pos[2] + linkPos[2]]
-            orn = [visualShape.orn[0] + linkOrn[0], visualShape.orn[1] + linkOrn[1], visualShape.orn[2] + linkOrn[2]]
-            orn = linkOrn
-            visualShape.vs.updatePosAndOrn(pos, boxOrn)
+                visualShapePos = visualShape.pos
+            pos = visualShapePos @ linkPos
+            orn = visualShape.orn @ linkOrn
+            visualShape.vs.updatePosAndOrn(pos, orn)
             visualShape.vs.draw(shaderProgram)
 
         endDisplay()
