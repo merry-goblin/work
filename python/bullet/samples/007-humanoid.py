@@ -89,7 +89,7 @@ def main():
 
     objectManager = URDFManager(physicsClientId)
     planeId = objectManager.add("data/plane.urdf", planePos, planeOrn)
-    boxId = objectManager.add("data/006-box.urdf", boxPos, boxOrn)
+    boxId = objectManager.add("data/007-humanoid.urdf", boxPos, boxOrn)
 
     shapes = objectManager.getVisualShapes(planeId)
     for key, visualShape in shapes.items():
