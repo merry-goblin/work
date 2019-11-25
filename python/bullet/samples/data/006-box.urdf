@@ -46,7 +46,7 @@
   </link>
   <joint name="base_to_right_leg" type="revolute">
     <axis xyz="0 1 0"/>
-    <limit effort="1000.0" lower="-1.57" upper="1.57" velocity="0.5"/>
+    <limit effort="1000.0" lower="-1.57" upper="1.57" velocity="1000"/>
     <origin rpy="0 0 0" xyz="1 0 0"/>
     <parent link="base_link"/>
     <child link="right_leg"/>

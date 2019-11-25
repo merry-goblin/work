@@ -61,7 +61,7 @@ def endDisplay():
     glUseProgram(0)
 
 def initPyBullet():
-    physicsClientId = p.connect(p.GUI)
+    physicsClientId = p.connect(p.DIRECT)
     p.resetSimulation()
     #p.setPhysicsEngineParameter(numSolverIterations=10)
     p.setTimeStep(1. / 60.)
@@ -98,6 +98,9 @@ def main():
     shapes = objectManager.getVisualShapes(boxId)
     for key, visualShape in shapes.items():
         visualShape.vs.prepare(shaderProgram)
+    print("----------")
+    print(p.getNumJoints(boxId))
+    print(p.getJointInfo(boxId, 0))
 
     """
     for i in range(p.getNumJoints(r2d2)):
@@ -120,25 +123,31 @@ def main():
     clock = pygame.time.Clock()
     done  = False
     tick  = 0
-    applyForce = False
-    force = (0,0,5000)
+    velocity = 0.0
+    force = 0.0
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE :
-                    applyForce = True
-        tick += 1
+                if event.key == pygame.K_UP:
+                    velocity = 100
+                    force = 1000.0
+                elif event.key == pygame.K_DOWN:
+                    velocity = -100
+                    force = 1000.0
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                    velocity = 0.0
+                    force = 0.0
 
-        if (applyForce) :
-            applyForce = False
-            forcePos = [0.0, 0.0, 0.0]
-            p.applyExternalForce(objectUniqueId=boxId, 
-                                 linkIndex=-1,
-                                 forceObj=force, 
-                                 posObj=forcePos,
-                                 flags=p.LINK_FRAME)
+        p.setJointMotorControl2(bodyUniqueId=boxId, 
+                           jointIndex=0,
+                           controlMode=p.VELOCITY_CONTROL,
+                           targetVelocity=velocity,
+                           force=force)
+
+        tick += 1
 
         startDisplay()
 
