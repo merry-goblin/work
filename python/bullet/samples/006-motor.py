@@ -131,10 +131,10 @@ def main():
                 done = True
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
-                    velocity = 100
+                    velocity = -100
                     force = 1000.0
                 elif event.key == pygame.K_DOWN:
-                    velocity = -100
+                    velocity = 100
                     force = 1000.0
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
