@@ -167,13 +167,10 @@ def main():
                 quatLinkOrn = linkState[1]
                 linkPos = TranslationMatrix(quatLinkPos)
                 linkOrn = getOrnMatrixFromQuaternion(quatLinkOrn)
-                #visualShapePos = linkOrn @ visualShape.pos
-                #visualShapePos = TranslationMatrix(visualShapePos[0][3], visualShapePos[1][3], visualShapePos[2][3])
             else:
                 linkPos = boxPos
                 linkOrn = boxOrn
-                #visualShapePos = visualShape.pos
-            pos = linkPos #visualShapePos @ linkPos
+            pos = linkPos
             orn = visualShape.orn @ linkOrn
             visualShape.vs.updatePosAndOrn(pos, orn)
             visualShape.vs.draw(shaderProgram)
