@@ -8,7 +8,7 @@ import pygame
 import numpy as np
 import pywavefront
 import pybullet as p
-from pyengine import WavefrontVisualiser
+from pyengine_old import WavefrontVisualiser
 
 
 
@@ -117,6 +117,18 @@ def main():
                                baseOrientation=planeOrn,
                                useMaximalCoordinates=True)
 
+    # Box 2
+    collisionBox2Id = p.createCollisionShape(p.GEOM_BOX, 
+                                             halfExtents=[sphereRadius, sphereRadius, sphereRadius])
+
+    box2Id = p.createMultiBody(baseMass=0,
+                               baseInertialFramePosition=[0, 0, 0],
+                               baseCollisionShapeIndex=collisionBox2Id,
+                               basePosition=boxPos2,
+                               baseOrientation=boxOrn2,
+                               useMaximalCoordinates=True)
+
+
     # Box 1
 
     collisionBoxId = p.createCollisionShape(shapeType=p.GEOM_MESH,
@@ -124,8 +136,6 @@ def main():
                                               collisionFramePosition=shift,
                                               meshScale=meshScale)
 
-    collisionBox2Id = p.createCollisionShape(p.GEOM_BOX, 
-                                             halfExtents=[sphereRadius, sphereRadius, sphereRadius])
     """
     linkMasses = []
     linkCollisionShapeIndices = []
@@ -248,14 +258,14 @@ def main():
 
         boxPos, boxOrn = p.getBasePositionAndOrientation(boxId)
         boxVisualizer.updatePosAndOrn(boxPos, boxOrn)
-        #boxPos2, boxOrn2 = p.getBasePositionAndOrientation(box2Id)
-        #box2Visualizer.updatePosAndOrn(boxPos2, boxOrn2)
+        boxPos2, boxOrn2 = p.getBasePositionAndOrientation(box2Id)
+        box2Visualizer.updatePosAndOrn(boxPos2, boxOrn2)
         planePos, planeOrn = p.getBasePositionAndOrientation(planeId)
         planeVisualizer.updatePosAndOrn(planePos, planeOrn)
 
         startDisplay()
         boxVisualizer.draw(shaderProgram, tick/60)
-        #box2Visualizer.draw(shaderProgram, tick/60)
+        box2Visualizer.draw(shaderProgram, tick/60)
         planeVisualizer.draw(shaderProgram, tick/60)
         endDisplay()
         pygame.display.flip()
