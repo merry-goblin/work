@@ -112,7 +112,7 @@ def main():
     #GEOM_SPHERE, GEOM_BOX, GEOM_CAPSULE, GEOM_CYLINDER, GEOM_PLANE, GEOM_MESH
 
     """
-    visualShapes = p.getVisualShapeData(r2d2)
+    visualShapes = p.getVisualShapeData(boxId)
     i = 0
     for vs in visualShapes:
         print("-------"+str(i)+"-------")

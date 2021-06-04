@@ -72,7 +72,7 @@ def initPyBullet():
 
 def main():
     pygame.init()
-    screen = pygame.display.set_mode((800, 480), pygame.OPENGL|pygame.DOUBLEBUF)
+    screen = pygame.display.set_mode((1600, 960), pygame.OPENGL|pygame.DOUBLEBUF)
 
     glEnable(GL_DEPTH_TEST)
 
@@ -80,7 +80,7 @@ def main():
         shaders.compileShader(vertexShader, GL_VERTEX_SHADER),
         shaders.compileShader(fragmentShader, GL_FRAGMENT_SHADER))
 
-    boxPos = [0.0, 0.0, 5.0]
+    boxPos = [0.0, 0.0, 6.0]
     boxOrn = p.getQuaternionFromEuler([0.0,0.0,0.0])
     planePos = [0.0, 0.0, 0.0]
     planeOrn = p.getQuaternionFromEuler([0.0,0.0,0.0])
@@ -89,7 +89,7 @@ def main():
 
     objectManager = URDFManager(physicsClientId)
     planeId = objectManager.add("data/plane.urdf", planePos, planeOrn)
-    boxId = objectManager.add("data/007-humanoid.urdf", boxPos, boxOrn)
+    boxId = objectManager.add("data/008-multi-shape.urdf", boxPos, boxOrn)
 
     shapes = objectManager.getVisualShapes(planeId)
     for key, visualShape in shapes.items():
@@ -125,6 +125,8 @@ def main():
     tick  = 0
     velocity = 0.0
     force = 0.0
+    velocity2 = 0.0
+    force2 = 0.0
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -136,16 +138,31 @@ def main():
                 elif event.key == pygame.K_DOWN:
                     velocity = 100
                     force = 250.0
+                elif event.key == pygame.K_LEFT:
+                    velocity2 = -100
+                    force2 = 250.0
+                elif event.key == pygame.K_RIGHT:
+                    velocity2 = 100
+                    force2 = 250.0
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                     velocity = 0.0
                     force = 0.0
+                elif event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                    velocity2 = 0.0
+                    force2 = 0.0
 
         p.setJointMotorControl2(bodyUniqueId=boxId, 
-                           jointIndex=0,
+                           jointIndex=1,
                            controlMode=p.VELOCITY_CONTROL,
                            targetVelocity=velocity,
                            force=force)
+
+        p.setJointMotorControl2(bodyUniqueId=boxId, 
+                           jointIndex=2,
+                           controlMode=p.VELOCITY_CONTROL,
+                           targetVelocity=velocity2,
+                           force=force2)
 
         tick += 1
 

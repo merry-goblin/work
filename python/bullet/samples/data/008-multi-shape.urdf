@@ -1,0 +1,113 @@
+<?xml version="1.0" ?>
+<robot name="box">
+  <link name="base_link">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="10"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="box-T2F_N3F_V3F.obj" scale="0.5 0.5 0.5"/>
+      </geometry>
+      <material name="white">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="box-T2F_N3F_V3F.obj" scale="1 1 1"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="pelvis">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="10"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="box-T2F_N3F_V3F.obj" scale="1 0.5 0.5"/>
+      </geometry>
+      <material name="white">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="box-T2F_N3F_V3F.obj" scale="1 0.5 0.5"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="base_to_pelvis" type="fixed">
+    <parent link="base_link"/>
+    <child link="pelvis"/>
+    <origin xyz="0 0 -1"/>
+  </joint>
+
+  <link name="right_leg_top">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 -0.25"/>
+      <mass value="10"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 -0.25"/>
+      <geometry>
+        <mesh filename="box-T2F_N3F_V3F.obj" scale="0.5 0.5 0.25"/>
+      </geometry>
+      <material name="white">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 -0.25"/>
+      <geometry>
+        <mesh filename="box-T2F_N3F_V3F.obj" scale="0.5 0.5 0.25"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="pelvis_to_right_leg_top" type="revolute">
+    <axis xyz="0 1 0"/>
+    <limit effort="1000.0" lower="-0.2" upper="1.57" velocity="1000"/>
+    <origin rpy="0 0 0" xyz="-1 0 -0.5"/>
+    <parent link="pelvis"/>
+    <child link="right_leg_top"/>
+  </joint>
+
+  <link name="left_leg_top">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 -0.25"/>
+      <mass value="10"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 -0.25"/>
+      <geometry>
+        <mesh filename="box-T2F_N3F_V3F.obj" scale="0.5 0.5 0.25"/>
+      </geometry>
+      <material name="white">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 -0.25"/>
+      <geometry>
+        <mesh filename="box-T2F_N3F_V3F.obj" scale="0.5 0.5 0.25"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="pelvis_to_left_leg_top" type="revolute">
+    <axis xyz="0 1 0"/>
+    <limit effort="1000.0" lower="-1.57" upper="0.2" velocity="1000"/>
+    <origin rpy="0 0 0" xyz="1 0 -0.5"/>
+    <parent link="pelvis"/>
+    <child link="left_leg_top"/>
+  </joint>
+</robot>

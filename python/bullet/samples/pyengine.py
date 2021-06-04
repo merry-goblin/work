@@ -9,11 +9,12 @@ farray = float32
 
 class VisualShape:
 
-    def __init__(self, id, visualizer, pos, orn):
+    def __init__(self, id, visualizer, pos, orn, scale=None):
         self.id = id # linkIndex
         self.vs = visualizer
         self.pos = pos
         self.orn = orn
+        self.scale = scale
 
 class URDFManager:
 
@@ -35,23 +36,31 @@ class URDFManager:
     def storeVisualShapes(self, multiBodyId, pos, orn):
         visualShapes = p.getVisualShapeData(multiBodyId)
         for visualShape in visualShapes:
+            """print("-----------------------------")
+            print("--- 1: "+str(visualShape[1]))
+            print("--- 2: "+str(visualShape[2]))
+            print("--- 3: "+str(visualShape[3]))
+            print("--- 4: "+str(visualShape[4]))
+            print(visualShape)"""
+            
             linkIndex = visualShape[1]
             visualType = visualShape[2]
+            scale = ScaleMatrix(visualShape[3][0], visualShape[3][1], visualShape[3][2])
             meshPath = visualShape[4]
             pos = TranslationMatrix(visualShape[5])
             orn = getOrnMatrixFromQuaternion(visualShape[6])
             if (visualType == p.GEOM_MESH):
                 meshPath = meshPath.decode("utf-8")
                 wavefrontData = pywavefront.Wavefront(meshPath)
-                wavefrontVisualizer = WavefrontVisualiser(wavefrontData, pos, orn)
-                self.visualShapes[multiBodyId][linkIndex] = VisualShape(linkIndex, wavefrontVisualizer, pos, orn)
+                wavefrontVisualizer = WavefrontVisualiser(wavefrontData, pos, orn, scale)
+                self.visualShapes[multiBodyId][linkIndex] = VisualShape(linkIndex, wavefrontVisualizer, pos, orn, scale)
 
     def getVisualShapes(self, multiBodyId):
         return self.visualShapes[multiBodyId]
 
 class WavefrontVisualiser:
 
-    def __init__(self, obj, pos, orn=None):
+    def __init__(self, obj, pos, orn=None, scale=None):
         material = obj.materials['Material']
         self.vertex_format = material.vertex_format
         self.vertices = farray(material.vertices)
@@ -59,8 +68,12 @@ class WavefrontVisualiser:
         self.uTexture = None
         self.pos = pos
         self.orn = orn
+        self.scale = scale
+
         if (orn is None):
             self.orn = IdentityMatrix()
+        if (scale is None):
+            self.scale = IdentityMatrix()
 
         if self.vertex_format == "T2F_N3F_V3F":
             self.initT2F_N3F_V3F()
@@ -90,11 +103,15 @@ class WavefrontVisualiser:
         self.positionStart = 2
         self.textureSize = 3
         self.textureStart = 0
-        
 
     def updatePosAndOrn(self, pos, orn):
         self.pos = pos
         self.orn = orn
+
+    def updateObjectMatrix(self, pos, orn, scale):
+        self.pos = pos
+        self.orn = orn
+        self.scale = scale
 
     def prepare(self, shaderProgram):
         self.vao = glGenVertexArrays(1)
@@ -166,7 +183,9 @@ class WavefrontVisualiser:
 
         # Matrix
         #objectMatrix = TranslationMatrix(sin(time), 0, 0) @ RotationMatrix(sin(time)*90, (1,1,1))
-        objectMatrix = self.pos @ self.orn
+
+        objectMatrix = self.pos @ self.orn @ self.scale
+        #objectMatrix = self.pos @ self.orn 
         attrMatrixIndex = glGetUniformLocation(shaderProgram, 'matrix')
         glUniformMatrix4fv(attrMatrixIndex, 1, True, pMatrix @ lMatrix @ objectMatrix)
 
@@ -329,6 +348,11 @@ class OpenGLVisualiser(object):
     def updatePosAndOrn(self, pos, orn):
         self.pos = pos
         self.orn = orn
+
+    def updateObjectMatrix(self, pos, orn, scale):
+        self.pos = pos
+        self.orn = orn
+        self.scale = scale
 
     def prepare(self, shaderProgram):
         self.vao = glGenVertexArrays(1)
