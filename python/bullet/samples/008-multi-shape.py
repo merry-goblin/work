@@ -153,13 +153,13 @@ def main():
                     force2 = 0.0
 
         p.setJointMotorControl2(bodyUniqueId=boxId, 
-                           jointIndex=1,
+                           jointIndex=2,
                            controlMode=p.VELOCITY_CONTROL,
                            targetVelocity=velocity,
                            force=force)
 
         p.setJointMotorControl2(bodyUniqueId=boxId, 
-                           jointIndex=2,
+                           jointIndex=4,
                            controlMode=p.VELOCITY_CONTROL,
                            targetVelocity=velocity2,
                            force=force2)
