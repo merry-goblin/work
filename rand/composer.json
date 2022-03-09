@@ -1,5 +1,10 @@
 {
     "require": {
-        "guzzlehttp/guzzle": "^6.5"
+        "merry-goblin/routerlith": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
     }
 }
