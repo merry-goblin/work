@@ -6,9 +6,12 @@ require_once(__DIR__."/../vendor/autoload.php");
 $routing = include("./../config/routing.php");
 $routerlith = new \Monolith\Routerlith\Routerlith($routing);
 
+//	Libraries to inject in Controller's constructor method
+$dependancies = [];
+
 //	Find route and reach controller
 $route      = $routerlith->getCurrentRoute();
-$response   = $routerlith->dispatch($route, array());
+$response   = $routerlith->dispatch($route, $dependancies);
 
 echo $response;
 
