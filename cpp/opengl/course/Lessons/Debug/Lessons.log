@@ -1,0 +1,8 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(499,5): warning MSB8004: Le répertoire Output ne se termine pas par une barre oblique finale. Cette instance de build ajoutera une barre oblique, comme requis, pour permettre l'évaluation correcte du répertoire Output.
+  lesson1.cpp
+lesson1.obj : error LNK2019: symbole externe non résolu glfwInit référencé dans la fonction main
+lesson1.obj : error LNK2019: symbole externe non résolu glfwTerminate référencé dans la fonction main
+lesson1.obj : error LNK2019: symbole externe non résolu glfwWindowHint référencé dans la fonction main
+lesson1.obj : error LNK2019: symbole externe non résolu glfwCreateWindow référencé dans la fonction main
+.\common\libs\glfw3.lib : warning LNK4272: type d'ordinateur bibliothèque 'x86' en conflit avec le type d'ordinateur cible 'x64'
+.\Lessons.exe : fatal error LNK1120: 4 externes non résolus
