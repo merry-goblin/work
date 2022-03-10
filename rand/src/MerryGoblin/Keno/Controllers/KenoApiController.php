@@ -18,6 +18,7 @@ class KenoApiController
 
 		$randomList = $randomizerService->getRandomIntegerList($nb, 1, 70, false, true);
 
+		header('Content-Type: application/json; charset=utf-8');
 		return json_encode($randomList);
 	}
 }

@@ -63,22 +63,25 @@ html, body {
 	width: 46px;
 	height: 46px;
 	padding: 3px;
-
 	background: #fff;
 	border: 2px solid #666;
 	color: #666;
-
 	font: 30px Roboto, sans-serif;
-}
-
-.merry-goblin-draw-grid-cell.selected > div,
-.merry-goblin-draw-grid-cell > div:hover {
-	background: #189AB4;
-	border: 2px solid #189AB4;
-	color: #fff;
 	cursor: pointer;
 }
 
+.merry-goblin-draw-grid-cell.selected > div,
+.merry-goblin-draw-grid-cell.selected > div:hover {
+	background: #189AB4;
+	border: 2px solid #189AB4;
+	color: #fff;
+}
+
+.merry-goblin-draw-grid-cell > div:hover {
+	background: #00AA45;
+	border: 2px solid #00AA45;
+	color: #fff;
+}
 
 /****************************/
 /** Result on current game **/
