@@ -62,13 +62,21 @@ html, body {
 	border-radius: 50%;
 	width: 46px;
 	height: 46px;
-	padding: 2px;
+	padding: 3px;
 
 	background: #fff;
 	border: 2px solid #666;
 	color: #666;
 
-	font: 32px Roboto, sans-serif;
+	font: 30px Roboto, sans-serif;
+}
+
+.merry-goblin-draw-grid-cell.selected > div,
+.merry-goblin-draw-grid-cell > div:hover {
+	background: #189AB4;
+	border: 2px solid #189AB4;
+	color: #fff;
+	cursor: pointer;
 }
 
 
