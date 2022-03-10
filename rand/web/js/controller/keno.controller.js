@@ -1,7 +1,10 @@
 
 (function($) {
 
-	var grid = new merryGoblin.drawGrid();
+	let settings = {
+		nbCells: 70
+	};
+	var grid = new merryGoblin.drawGrid(settings);
 	grid.new();
 
 	var jqxhr = $.get("api/player/getARandomGrid/10", function(data) {

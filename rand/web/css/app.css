@@ -1,0 +1,83 @@
+
+html, body {
+	background-color: #666;
+	color: #fff;
+}
+
+
+/*************/
+/** History **/
+
+.history-block {
+	float: right;
+	width: 25%;
+	padding: 20px;
+	background-color: #444;
+	color: #fff;
+}
+
+
+/******************/
+/** Player grids **/
+
+.player-grids-block {
+	width: 75%;
+	padding: 20px;
+	background-color: #ddd;
+	color: #333;
+}
+
+.merry-goblin-draw-grid {
+	width: 720px;
+	padding: 20px 0px 20px 0px;
+	text-align: center;
+}
+
+.merry-goblin-draw-grid h4 {
+	text-align: left;
+	font-size: 24px;
+	border-bottom: 1px solid #777;
+	clear: both;
+}
+
+/* start clearfix */
+.merry-goblin-draw-grid:before,
+.merry-goblin-draw-grid:after {
+	display: table;
+	content: " ";
+}
+.merry-goblin-draw-grid:after {
+	clear: both;
+}
+/* end clearfix */
+
+.merry-goblin-draw-grid-cell {
+	float: left;
+	width: 72px;
+	height: 72px;
+	padding: 12px;
+}
+
+.merry-goblin-draw-grid-cell > div {
+	border-radius: 50%;
+	width: 46px;
+	height: 46px;
+	padding: 2px;
+
+	background: #fff;
+	border: 2px solid #666;
+	color: #666;
+
+	font: 32px Roboto, sans-serif;
+}
+
+
+/****************************/
+/** Result on current game **/
+
+.result-block {
+	width: 75%;
+	padding: 20px;
+	background-color: #ddd;
+	color: #333;
+}
