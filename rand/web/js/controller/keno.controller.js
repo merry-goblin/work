@@ -1,5 +1,5 @@
 
-(function($) {
+(function($, reactor) {
 
 	let settings = {
 		nbCells: 70,
@@ -9,15 +9,13 @@
 	//	All the grids
 	var grids = {};
 
-	//	Build a new grid
+	//	Display a new grid & listen of events triggered when a button is clicked
 	$('.new-grid-button').click(function() {
 
+		//	Build a new grid
 		let grid = new merryGoblin.drawGrid(settings);
 		let gridNumber = grid.new();
 		grids["num"+gridNumber] = grid;
-
-		//	Events
-		let reactor = grid.getReactor();
 
 		//	UI: fill grid randomly
 		reactor.addEventListener('button-fill-grid-randomly-clicked', function(params) {
@@ -31,4 +29,4 @@
 		});
 	});
 
-})(jQuery);
+})(jQuery, reactor);

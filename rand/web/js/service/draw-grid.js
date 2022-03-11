@@ -2,7 +2,7 @@
 /** @namespace */
 var merryGoblin = merryGoblin || {};
 
-(function($, merryGoblin, Reactor) {
+(function($, merryGoblin, reactor) {
 
 	merryGoblin.drawGrid = function(p_settings) {
 
@@ -26,9 +26,6 @@ var merryGoblin = merryGoblin || {};
 		//	Dom elements
 		var $gridContainer = null;
 		var $grid = null;
-
-		//	Events
-		var reactor = new Reactor();
 
 		//	Others
 		var idCounter = 0; // To get a unique IDs for DOM elements
@@ -165,4 +162,4 @@ var merryGoblin = merryGoblin || {};
 		return scope;
 	}
 
-})(jQuery, merryGoblin, Reactor);
+})(jQuery, merryGoblin, reactor);

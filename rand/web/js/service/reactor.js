@@ -26,3 +26,5 @@ Reactor.prototype.dispatchEvent = function(eventName, eventArgs) {
 Reactor.prototype.addEventListener = function(eventName, callback) {
 	this.events[eventName].registerCallback(callback);
 };
+
+var reactor = new Reactor();
