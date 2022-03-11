@@ -1,6 +1,7 @@
 {
     "require": {
-        "merry-goblin/routerlith": "dev-master"
+        "merry-goblin/routerlith": "dev-master",
+        "merry-goblin/casterlith": "dev-master"
     },
     "autoload": {
         "psr-4": {

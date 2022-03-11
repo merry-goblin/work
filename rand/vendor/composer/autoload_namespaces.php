@@ -7,4 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Monolith\\Routerlith\\' => array($vendorDir . '/merry-goblin/routerlith'),
+    'Monolith\\Casterlith\\' => array($vendorDir . '/merry-goblin/casterlith'),
 );

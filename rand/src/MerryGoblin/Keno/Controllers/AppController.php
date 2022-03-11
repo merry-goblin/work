@@ -2,7 +2,7 @@
 
 namespace MerryGoblin\Keno\Controllers;
 
-class AppController
+class AppController extends AbstractController
 {
 	public function getAction()
 	{

@@ -6,6 +6,35 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit70220d826bc88a8b912e3921ec19b91c
 {
+    public static $prefixLengthsPsr4 = array (
+        'D' => 
+        array (
+            'Doctrine\\Deprecations\\' => 22,
+            'Doctrine\\DBAL\\' => 14,
+            'Doctrine\\Common\\Cache\\' => 22,
+            'Doctrine\\Common\\' => 16,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'Doctrine\\Deprecations\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/deprecations/lib/Doctrine/Deprecations',
+        ),
+        'Doctrine\\DBAL\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/dbal/lib/Doctrine/DBAL',
+        ),
+        'Doctrine\\Common\\Cache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache',
+        ),
+        'Doctrine\\Common\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/event-manager/lib/Doctrine/Common',
+        ),
+    );
+
     public static $fallbackDirsPsr4 = array (
         0 => __DIR__ . '/../..' . '/src',
     );
@@ -17,6 +46,10 @@ class ComposerStaticInit70220d826bc88a8b912e3921ec19b91c
             array (
                 0 => __DIR__ . '/..' . '/merry-goblin/routerlith',
             ),
+            'Monolith\\Casterlith\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/merry-goblin/casterlith',
+            ),
         ),
     );
 
@@ -27,6 +60,8 @@ class ComposerStaticInit70220d826bc88a8b912e3921ec19b91c
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
+            $loader->prefixLengthsPsr4 = ComposerStaticInit70220d826bc88a8b912e3921ec19b91c::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit70220d826bc88a8b912e3921ec19b91c::$prefixDirsPsr4;
             $loader->fallbackDirsPsr4 = ComposerStaticInit70220d826bc88a8b912e3921ec19b91c::$fallbackDirsPsr4;
             $loader->prefixesPsr0 = ComposerStaticInit70220d826bc88a8b912e3921ec19b91c::$prefixesPsr0;
             $loader->classMap = ComposerStaticInit70220d826bc88a8b912e3921ec19b91c::$classMap;

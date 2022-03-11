@@ -12,12 +12,6 @@ $routing = array(
 		),
 
 		//	Keno API
-		'test' => array(
-			'path'      => 'api/test',
-			'action'    => 'MerryGoblin\Keno\Controllers\KenoApiController.testAction',
-			'methods'   => 'GET',
-			'roles'     => 'anonymous',
-		),
 		'getARandomGrid' => array(
 			'path'      => 'api/player/grid/random/{nb}',
 			'action'    => 'MerryGoblin\Keno\Controllers\KenoApiController.getARandomGridAction',
@@ -27,7 +21,7 @@ $routing = array(
 		'postGrids' => array(
 			'path'      => 'api/player/grids',
 			'action'    => 'MerryGoblin\Keno\Controllers\KenoApiController.postGridsAction',
-			'methods'   => ['GET','POST'],
+			'methods'   => 'POST',
 			'roles'     => 'anonymous',
 		),
 	),
