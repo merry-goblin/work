@@ -4,13 +4,31 @@ namespace MerryGoblin\Keno\Services;
 
 class Randomizer
 {
+	protected $randomIntExists = false;
+
+	public function __construct()
+	{
+		$this->randomIntExists = function_exists('random_int');
+	}
+
+	protected function getCompatibleRandomInteger($min, $max)
+	{
+		if ($this->randomIntExists) {
+			return random_int($min, $max);
+		}
+		else {
+			return mt_rand($min, $max);
+		}
+	}
+
+
 	public function getRandomInteger($min, $max)
 	{
 		for ($i=0; $i<10; $i++) {
-			random_int($min, $max); // force seed to change multiple times
+			$this->getCompatibleRandomInteger($min, $max); // force seed to change multiple times
 		}
 
-		return random_int($min, $max);
+		return $this->getCompatibleRandomInteger($min, $max);
 	}
 
 	public function getRandomIntegerList($nb, $min, $max, $replacement = false, $sort = true)
