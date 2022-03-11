@@ -44,8 +44,6 @@ var merryGoblin = merryGoblin || {};
 			//	Grid parameters
 			nbCells            = (settings['nbCells'] != null)                ? settings['nbCells']                   : defaultNbCells;
 			maxSelectableCells = (settings['maxSelectableCells'] != null)     ? settings['maxSelectableCells']        : defaultMaxSelectableCells;
-
-			reactor.registerEvent('button-fill-grid-randomly-clicked');
 		}
 
 		/* Graphics */

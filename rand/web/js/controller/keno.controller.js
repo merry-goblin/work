@@ -9,24 +9,54 @@
 	//	All the grids
 	var grids = {};
 
-	//	Display a new grid & listen of events triggered when a button is clicked
-	$('.new-grid-button').click(function() {
+	function newGrid() {
 
 		//	Build a new grid
 		let grid = new merryGoblin.drawGrid(settings);
 		let gridNumber = grid.new();
 		grids["num"+gridNumber] = grid;
+	}
+	newGrid();
 
-		//	UI: fill grid randomly
-		reactor.addEventListener('button-fill-grid-randomly-clicked', function(params) {
+	//	Display a new grid & listen of events triggered when this button is clicked
+	$('.new-grid-button').click(function() {
 
-			grids["num"+params.gridNumber].reset();
-			let jqxhr = $.get("api/player/getARandomGrid/10", function(numberList) {
+		newGrid();
+	});
 
+	//	Send all grids when this button is clicked
+	$('.send-grids-button').click(function() {
+
+		let params = {
+			test: 'test'
+		};
+
+		var jqxhr = $.post(
+			'api/player/grids',
+			params,
+			function(data) {
+				console.log('post successful');
+			},
+			'json'
+		);
+	});
+
+	//	UI: fill grid randomly
+	reactor.registerEvent('button-fill-grid-randomly-clicked');
+	reactor.addEventListener('button-fill-grid-randomly-clicked', function(params) {
+
+		grids["num"+params.gridNumber].reset();
+		$ressource = 'api/player/grid/random/10';
+		let jqxhr = $.get($ressource, function(numberList) {
+
+			if (Array.isArray(numberList)) {
 				grids["num"+params.gridNumber].selectCells(numberList);
-			});
-
+			}
+			else {
+				console.log("An error occured. Ressource "+$ressource+" didn't sent back an expected response");
+			}
 		});
+
 	});
 
 })(jQuery, reactor);

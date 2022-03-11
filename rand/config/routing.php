@@ -10,6 +10,7 @@ $routing = array(
 			'methods'   => 'GET',
 			'roles'     => 'anonymous',
 		),
+
 		//	Keno API
 		'test' => array(
 			'path'      => 'api/test',
@@ -17,11 +18,16 @@ $routing = array(
 			'methods'   => 'GET',
 			'roles'     => 'anonymous',
 		),
-		//	Keno API
 		'getARandomGrid' => array(
-			'path'      => 'api/player/getARandomGrid/{nb}',
+			'path'      => 'api/player/grid/random/{nb}',
 			'action'    => 'MerryGoblin\Keno\Controllers\KenoApiController.getARandomGridAction',
 			'methods'   => 'GET',
+			'roles'     => 'anonymous',
+		),
+		'postGrids' => array(
+			'path'      => 'api/player/grids',
+			'action'    => 'MerryGoblin\Keno\Controllers\KenoApiController.postGridsAction',
+			'methods'   => 'POST',
 			'roles'     => 'anonymous',
 		),
 	),
