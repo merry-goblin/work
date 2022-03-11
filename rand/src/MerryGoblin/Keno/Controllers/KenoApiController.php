@@ -24,9 +24,13 @@ class KenoApiController
 
 	public function postGridsAction()
 	{
-		$response = 'success';
+		error_log("--------------------");
+		$grids = file_get_contents('php://input');
+		error_log(print_r($grids, true));
+		$grids = json_decode(file_get_contents('php://input'), true);
+		error_log(print_r($grids, true));
 
-
+		$response = $grids;
 
 		header('Content-Type: application/json; charset=utf-8');
 		return json_encode($response);

@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'a18a07eec1fc210fb671a5010373a025ed2e6108',
+        'reference' => '890d2f51fae50182832ba32d3527b8052be76410',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'a18a07eec1fc210fb671a5010373a025ed2e6108',
+            'reference' => '890d2f51fae50182832ba32d3527b8052be76410',
             'dev_requirement' => false,
         ),
         'merry-goblin/routerlith' => array(
@@ -27,7 +27,7 @@
             'aliases' => array(
                 0 => '9999999-dev',
             ),
-            'reference' => 'd9ee83e530004c65a5760c74c2ece384a78596b3',
+            'reference' => 'b51374fdcaa98a0e069b963e3d0fe110b6d7cc97',
             'dev_requirement' => false,
         ),
     ),

@@ -16,6 +16,19 @@ html, body {
 	color: #fff;
 }
 
+@media (max-width: 767px) {
+
+	.history-block {
+		width: 100%;
+	}
+}
+
+@media (max-width: 575px) {
+
+	.history-block {
+		width: 100%;
+	}
+}
 
 /******************/
 /** Player grids **/
@@ -81,6 +94,110 @@ html, body {
 	background: #00AA45;
 	border: 2px solid #00AA45;
 	color: #fff;
+}
+
+@media (max-width: 1199px) {
+
+	.player-grids-block {
+		width: 75%;
+	}
+
+	.merry-goblin-draw-grid {
+		width: 662px;
+		padding: 10px 0px 20px 0px;
+	}
+
+	.merry-goblin-draw-grid-cell {
+		width: 66px;
+		height: 66px;
+		padding: 12px;
+	}
+
+	.merry-goblin-draw-grid-cell > div {
+		width: 42px;
+		height: 42px;
+		padding: 5px;
+		font-size: 24px;
+	}
+
+}
+
+@media (max-width: 991px) {
+
+	.player-grids-block {
+		width: 75%;
+	}
+
+	.merry-goblin-draw-grid {
+		width: 482px;
+		padding: 10px 0px 20px 0px;
+	}
+
+	.merry-goblin-draw-grid-cell {
+		width: 48px;
+		height: 48px;
+		padding: 6px;
+	}
+
+	.merry-goblin-draw-grid-cell > div {
+		width: 36px;
+		height: 36px;
+		padding: 3px;
+		font-size: 22px;
+	}
+
+}
+
+@media (max-width: 767px) {
+
+	.player-grids-block {
+		width: 100%;
+	}
+
+	.merry-goblin-draw-grid {
+		width: 100%;
+		padding: 10px 0px 20px 0px;
+	}
+
+	.merry-goblin-draw-grid-cell {
+		width: 66px;
+		height: 66px;
+		padding: 12px;
+	}
+
+	.merry-goblin-draw-grid-cell > div {
+		width: 42px;
+		height: 42px;
+		padding: 5px;
+		font-size: 24px;
+	}
+
+}
+
+@media (max-width: 575px) {
+
+	.player-grids-block {
+		width: 100%;
+	}
+
+	.merry-goblin-draw-grid {
+		width: 100%;
+		padding: 10px 0px 20px 0px;
+	}
+
+	.merry-goblin-draw-grid-cell {
+		width: 48px;
+		height: 48px;
+		padding: 6px;
+	}
+
+	.merry-goblin-draw-grid-cell > div {
+		width: 36px;
+		height: 36px;
+		padding: 3px;
+		font-size: 22px;
+	}
+
 }
 
 /****************************/

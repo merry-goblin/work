@@ -155,6 +155,25 @@ var merryGoblin = merryGoblin || {};
 			getReactor: function() {
 
 				return reactor;
+			},
+
+			doesGridCanBeSent: function() {
+
+				let $gridIsValid = (getNumberOfSelectedCells() == maxSelectableCells);
+
+				return $gridIsValid;
+			},
+
+			getSelectedNumbers: function() {
+
+				let cells = [];
+
+				$grid.find('.'+cellClassSelector+'.selected').each(function() {
+
+					cells.push(Number($(this).attr('data-number')));
+				});
+
+				return cells;
 			}
 		};
 		return scope;

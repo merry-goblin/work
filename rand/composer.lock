@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/merry-goblin/routerlith-composer.git",
-                "reference": "d9ee83e530004c65a5760c74c2ece384a78596b3"
+                "reference": "b51374fdcaa98a0e069b963e3d0fe110b6d7cc97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/merry-goblin/routerlith-composer/zipball/d9ee83e530004c65a5760c74c2ece384a78596b3",
-                "reference": "d9ee83e530004c65a5760c74c2ece384a78596b3",
+                "url": "https://api.github.com/repos/merry-goblin/routerlith-composer/zipball/b51374fdcaa98a0e069b963e3d0fe110b6d7cc97",
+                "reference": "b51374fdcaa98a0e069b963e3d0fe110b6d7cc97",
                 "shasum": ""
             },
             "require": {
@@ -51,7 +51,7 @@
                 "issues": "https://github.com/merry-goblin/routerlith-composer/issues",
                 "source": "https://github.com/merry-goblin/routerlith-composer/tree/master"
             },
-            "time": "2019-03-20T18:31:36+00:00"
+            "time": "2022-03-11T21:03:06+00:00"
         }
     ],
     "packages-dev": [],

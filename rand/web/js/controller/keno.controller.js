@@ -27,18 +27,37 @@
 	//	Send all grids when this button is clicked
 	$('.send-grids-button').click(function() {
 
-		let params = {
-			test: 'test'
-		};
+		//	All grids have to be valid so we can accept to send those
+		let gridsAreValid = true;
+		for (let i in grids) {
+			gridsAreValid = grids[i].doesGridCanBeSent();
+			if (!gridsAreValid) {
+				break;
+			}
+		}
 
-		var jqxhr = $.post(
-			'api/player/grids',
-			params,
-			function(data) {
-				console.log('post successful');
-			},
-			'json'
-		);
+		if (gridsAreValid) {
+
+			//	Each numbers of each grids we will be sent as parameters of a ajax call with post for method of sending
+			let params = {
+				grids: []
+			};
+			for (let i in grids) {
+				params.grids.push(grids[i].getSelectedNumbers());
+			}
+
+			var jqxhr = $.post(
+				'api/player/grids',
+				JSON.stringify(params),
+				function(data) {
+					console.log(data);
+				},
+				'json'
+			);
+		}
+		else {
+			console.log("Grids are not fully filled for sending")
+		}
 	});
 
 	//	UI: fill grid randomly

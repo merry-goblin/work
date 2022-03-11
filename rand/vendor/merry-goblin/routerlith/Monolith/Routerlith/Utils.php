@@ -5,13 +5,13 @@ namespace Monolith\Routerlith;
 class Utils
 {
 	/**
-	 * @param  string|array $param
+	 * @param  string|array $params
 	 * @return array
 	 */
-	public static function forceParamAsAnArray($param)
+	public static function forceParamAsAnArray($params)
 	{
-		if (is_string($param)) {
-			$params = explode(",", $param);
+		if (is_string($params)) {
+			$params = explode(",", $params);
 		}
 		foreach ($params as $key => $param) {
 			$params[$key] = trim($param);
