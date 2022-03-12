@@ -9,4 +9,5 @@ class Game implements EntityInterface
 {
 	public $id = null;
 	public $cells = null;
+	public $active = null;
 }

@@ -23,19 +23,29 @@ class KenoApiController extends AbstractController
 
 		//	ORM
 		$orm = $this->casterlithService->getConnection('keno');
+		$gameComposer  = $orm->getComposer('MerryGoblin\Keno\Models\Composers\Game');
+
+		$currentGame = $gameComposer->getCurrentGame();
+
+		var_dump($currentGame);
+
+		exit();
+
 		$dbal = $orm->getDBALConnection();
 
-		$sql = "
-			INSERT INTO game
-				(`id`, `cells`)
-			VALUES 
-				(:id,  :cells)
-		";
-		$values = array(
-			'id'    => null,
-			'cells' => null,
-		);
-		$dbal->executeUpdate($sql, $values);
+		/*foreach ($grids as $grid) {
+			$sql = "
+				INSERT INTO participation
+					(`id`, `cells`, `game_id`)
+				VALUES 
+					(:id,  :cells)
+			";
+			$values = array(
+				'id'    => null,
+				'cells' => json_encode($grid),
+			);
+			$dbal->executeUpdate($sql, $values);
+		}*/
 
 		$response = $grids;
 

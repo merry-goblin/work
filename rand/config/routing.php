@@ -21,7 +21,7 @@ $routing = array(
 		'postGrids' => array(
 			'path'      => 'api/player/grids',
 			'action'    => 'MerryGoblin\Keno\Controllers\KenoApiController.postGridsAction',
-			'methods'   => 'POST',
+			'methods'   => 'GET,POST',
 			'roles'     => 'anonymous',
 		),
 	),

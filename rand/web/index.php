@@ -3,8 +3,9 @@
 require_once(__DIR__."/../vendor/autoload.php");
 
 //	Database access
-$config = include("./../config/database.php");
-$casterlithService = new \MerryGoblin\Keno\Services\CasterlithService($config);
+$dbParameters = include("./../config/database.php");
+$config = new \Monolith\Casterlith\Configuration();
+$casterlithService = new \MerryGoblin\Keno\Services\CasterlithService($dbParameters, $config);
 
 //	Routing configuration
 $routing = include("./../config/routing.php");

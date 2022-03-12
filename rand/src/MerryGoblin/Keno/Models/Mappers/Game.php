@@ -11,10 +11,11 @@ use Monolith\Casterlith\Relations\ManyToOne;
 class Game extends AbstractMapper implements MapperInterface
 {
 	protected static $table      = 'game';
-	protected static $entity     = 'MerryGoblin\Keno\Entities\Game';
+	protected static $entity     = 'MerryGoblin\Keno\Models\Entities\Game';
 	protected static $fields     = array(
 		'id'    => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
 		'cells' => array('type' => 'string'),
+		'active' => array('type' => 'boolean'),
 	);
 	protected static $relations   = null;
 
