@@ -50,11 +50,15 @@
 				'api/player/grids',
 				JSON.stringify(params),
 				function(data) {
+					//	Current grids are destroyed
 					for (let i in grids) {
 						grids[i].remove();
 						delete grids[i];
 					}
 					grids = {};
+
+					//	A new and empty grid is added
+					newGrid();
 				},
 				'json'
 			);
