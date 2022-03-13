@@ -19,35 +19,23 @@ class KenoApiController extends AbstractController
 	public function postGridsAction()
 	{
 		//	Input paramaters
-		$grids = json_decode(file_get_contents('php://input'), true);
+		$input = json_decode(file_get_contents('php://input'), true);
 
 		//	ORM
 		$orm = $this->casterlithService->getConnection('keno');
-		$gameComposer  = $orm->getComposer('MerryGoblin\Keno\Models\Composers\Game');
+		$gameComposer = $orm->getComposer('MerryGoblin\Keno\Models\Composers\Game');
+		$gridComposer = $orm->getComposer('MerryGoblin\Keno\Models\Composers\Grid');
 
-		$currentGame = $gameComposer->getCurrentGame();
+		//	Active game
+		$currentGame = $gameComposer->getCurrentGameOrInsertItNeeded();
 
-		var_dump($currentGame);
+		//	Insert all grids
+		foreach ($input['grids'] as $grid) {
 
-		exit();
+			$gridComposer->insertGrid($currentGame, json_encode($grid));
+		}
 
-		$dbal = $orm->getDBALConnection();
-
-		/*foreach ($grids as $grid) {
-			$sql = "
-				INSERT INTO participation
-					(`id`, `cells`, `game_id`)
-				VALUES 
-					(:id,  :cells)
-			";
-			$values = array(
-				'id'    => null,
-				'cells' => json_encode($grid),
-			);
-			$dbal->executeUpdate($sql, $values);
-		}*/
-
-		$response = $grids;
+		$response = 'success';
 
 		header('Content-Type: application/json; charset=utf-8');
 		return json_encode($response);

@@ -8,15 +8,14 @@ use Monolith\Casterlith\Mapper\MapperInterface;
 use Monolith\Casterlith\Relations\OneToMany;
 use Monolith\Casterlith\Relations\ManyToOne;
 
-class Game extends AbstractMapper implements MapperInterface
+class Grid extends AbstractMapper implements MapperInterface
 {
-	protected static $table      = 'game';
-	protected static $entity     = 'MerryGoblin\Keno\Models\Entities\Game';
+	protected static $table      = 'grid';
+	protected static $entity     = 'MerryGoblin\Keno\Models\Entities\Grid';
 	protected static $fields     = array(
 		'id'    => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
 		'cells' => array('type' => 'string'),
-		'active' => array('type' => 'boolean'),
-		'status' => array('type' => 'integer'),
+		'gameId' => array('type' => 'integer'),
 	);
 	protected static $relations   = null;
 

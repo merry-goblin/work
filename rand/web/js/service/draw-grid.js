@@ -97,6 +97,11 @@ var merryGoblin = merryGoblin || {};
 			$grid.find('.'+cellClassSelector).removeClass('selected');
 		}
 
+		function removeGridFromDom() {
+
+			$grid.remove();
+		}
+
 		/* Utilitaries */
 
 		function getUniqueId() {
@@ -113,6 +118,24 @@ var merryGoblin = merryGoblin || {};
 		function getNumberOfSelectedCells() {
 
 			return $grid.find('.'+cellClassSelector+'.selected').length;
+		}
+
+		function destroy() {
+
+			self = null;
+			settings = null;
+			defaultGridContainerSelector = null;
+			defaultGridClassSelector = null;
+			defaultCellClassSelector = null;
+			defaultNbCells = null;
+			defaultMaxSelectableCells = null;
+			nbCells = null;
+			maxSelectableCells = null;
+			gridClassSelector = null;
+			cellClassSelector = null;
+			$gridContainer = null;
+			$grid = null;
+			idCounter = null;
 		}
 
 		var scope = {
@@ -140,6 +163,12 @@ var merryGoblin = merryGoblin || {};
 				unselectCells();
 			},
 
+			remove: function() {
+
+				removeGridFromDom();
+				destroy();
+			},
+
 			selectCells: function(numberList) {
 
 				for (var i in numberList) {
@@ -150,11 +179,6 @@ var merryGoblin = merryGoblin || {};
 			selectCell: function(number) {
 
 				selectCell(number);
-			},
-
-			getReactor: function() {
-
-				return reactor;
 			},
 
 			doesGridCanBeSent: function() {

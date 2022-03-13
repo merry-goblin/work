@@ -50,7 +50,11 @@
 				'api/player/grids',
 				JSON.stringify(params),
 				function(data) {
-					console.log(data);
+					for (let i in grids) {
+						grids[i].remove();
+						delete grids[i];
+					}
+					grids = {};
 				},
 				'json'
 			);
