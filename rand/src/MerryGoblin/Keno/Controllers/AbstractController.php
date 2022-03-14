@@ -4,6 +4,8 @@ namespace MerryGoblin\Keno\Controllers;
 
 use MerryGoblin\Keno\Services\Randomizer;
 
+use MerryGoblin\Keno\Exceptions\PublicExceptionInterface;
+
 abstract class AbstractController
 {
 	protected $casterlithService = null;
@@ -30,6 +32,8 @@ abstract class AbstractController
 	 */
 	protected function handleAPIException($e)
 	{
+		error_log($e);
+
 		if ($e instanceof PublicExceptionInterface && $e->isPublic()) {
 			$errorCode    = $e->getCode();
 			$errorMessage = $e->getMessage();

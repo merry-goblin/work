@@ -11,9 +11,10 @@ class Game extends AbstractComposer implements ComposerInterface
 {
 	protected static $mapperName  = 'MerryGoblin\\Keno\\Models\\Mappers\\Game';
 
-	public CONST BET_ALLOWED_STATUS = 1;
-	public CONST DRAW_STATUS        = 2;
-	public CONST FINISHED_STATUS    = 3;
+	public CONST BETS_ARE_ALLOWED_STATUS = 1; // Game is open to bets.
+	public CONST DRAW_PENDING_STATUS     = 2; // Draw is pending. No process ongoing. Can be processed.
+	public CONST DRAW_PROCESSING_STATUS  = 3; // A process is happening we can't start another process yet.
+	public CONST FINISHED_STATUS         = 4; // Draw is finished.
 
 	public function getCurrentGameOrInsertItNeeded()
 	{
@@ -53,6 +54,27 @@ class Game extends AbstractComposer implements ComposerInterface
 			'cells'  => null,
 			'active' => true,
 			'status' => 1,
+		);
+		$dbal->executeUpdate($sql, $values);
+	}
+
+	/**
+	 * @param  MerryGoblin\Keno\Models\Entities\Game $game
+	 * @param  integer $status
+	 * @return null
+	 */
+	public function changeGameStatus($game, $status)
+	{
+		$dbal = $this->getDBALConnection();
+
+		$sql = "
+			UPDATE game
+			SET   status = :status
+			WHERE id = :id
+		";
+		$values = array(
+			'status' => $status,
+			'id'     => $game->id,
 		);
 		$dbal->executeUpdate($sql, $values);
 	}

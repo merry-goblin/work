@@ -18,13 +18,13 @@
 	}
 	newGrid();
 
-	//	Display a new grid & listen of events triggered when this button is clicked
+	//	UI: display a new grid & listen of events triggered when this button is clicked
 	$('.new-grid-button').click(function() {
 
 		newGrid();
 	});
 
-	//	Send all grids when this button is clicked
+	//	UI: send all grids when this button is clicked
 	$('.send-grids-button').click(function() {
 
 		//	All grids have to be valid so we can accept to send those
@@ -87,14 +87,14 @@
 
 	});
 
-	//	Draw
-	$('.draw-button').click(function() {
+	//	UI: process
+	$('.draw-process-button').click(function() {
 
 		var jqxhr = $.post(
-			'api/game/draw',
+			'api/game/draw/process',
 			null,
 			function(data) {
-				console.log("Draw response");
+				console.log("Draw process response");
 				console.log(data);
 			},
 			'json'

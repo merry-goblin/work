@@ -21,12 +21,26 @@ $routing = array(
 		'postGrids' => array(
 			'path'      => 'api/player/grids',
 			'action'    => 'MerryGoblin\Keno\Controllers\KenoApiController.postGridsAction',
-			'methods'   => 'GET,POST',
+			'methods'   => 'POST',
 			'roles'     => 'anonymous',
 		),
 		'postGameDraw' => array(
 			'path'      => 'api/game/draw',
 			'action'    => 'MerryGoblin\Keno\Controllers\KenoApiController.postGameDrawAction',
+			'methods'   => 'POST',
+			'roles'     => 'anonymous',
+		),
+		//	Process can be called by the FRONT ...
+		'postGameDrawProcess' => array(
+			'path'      => 'api/game/draw/process',
+			'action'    => 'MerryGoblin\Keno\Controllers\KenoApiController.postGameDrawProcessAction',
+			'methods'   => 'GET,POST',
+			'roles'     => 'anonymous',
+		),
+		//	... or called by a crontab by the BACK
+		'postGameDrawProcessByCron' => array(
+			'path'      => null,
+			'action'    => 'MerryGoblin\Keno\Controllers\KenoApiController.postGameDrawProcessAction',
 			'methods'   => 'GET,POST',
 			'roles'     => 'anonymous',
 		),
