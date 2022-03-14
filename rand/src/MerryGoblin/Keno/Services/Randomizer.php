@@ -21,7 +21,6 @@ class Randomizer
 		}
 	}
 
-
 	public function getRandomInteger($min, $max)
 	{
 		for ($i=0; $i<10; $i++) {

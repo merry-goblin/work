@@ -16,7 +16,7 @@ class Game extends AbstractComposer implements ComposerInterface
 	public CONST DRAW_PROCESSING_STATUS  = 3; // A process is happening we can't start another process yet.
 	public CONST FINISHED_STATUS         = 4; // Draw is finished.
 
-	public function getCurrentGameOrInsertItNeeded()
+	public function getCurrentGameOrInsertIfNeeded()
 	{
 		$currentGame = $this->getCurrentGame();
 		if (is_null($currentGame)) {
