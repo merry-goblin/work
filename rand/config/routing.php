@@ -24,6 +24,12 @@ $routing = array(
 			'methods'   => 'GET,POST',
 			'roles'     => 'anonymous',
 		),
+		'postGameDraw' => array(
+			'path'      => 'api/game/draw',
+			'action'    => 'MerryGoblin\Keno\Controllers\KenoApiController.postGameDrawAction',
+			'methods'   => 'GET,POST',
+			'roles'     => 'anonymous',
+		),
 	),
 );
 

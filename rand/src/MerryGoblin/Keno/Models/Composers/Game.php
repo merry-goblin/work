@@ -11,6 +11,10 @@ class Game extends AbstractComposer implements ComposerInterface
 {
 	protected static $mapperName  = 'MerryGoblin\\Keno\\Models\\Mappers\\Game';
 
+	public CONST BET_ALLOWED_STATUS = 1;
+	public CONST DRAW_STATUS        = 2;
+	public CONST FINISHED_STATUS    = 3;
+
 	public function getCurrentGameOrInsertItNeeded()
 	{
 		$currentGame = $this->getCurrentGame();

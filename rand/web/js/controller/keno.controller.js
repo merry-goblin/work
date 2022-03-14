@@ -74,8 +74,9 @@
 
 		grids["num"+params.gridNumber].reset();
 		$ressource = 'api/player/grid/random/10';
-		let jqxhr = $.get($ressource, function(numberList) {
+		let jqxhr = $.get($ressource, function(response) {
 
+			let numberList = response.data;
 			if (Array.isArray(numberList)) {
 				grids["num"+params.gridNumber].selectCells(numberList);
 			}
@@ -84,6 +85,20 @@
 			}
 		});
 
+	});
+
+	//	Draw
+	$('.draw-button').click(function() {
+
+		var jqxhr = $.post(
+			'api/game/draw',
+			null,
+			function(data) {
+				console.log("Draw response");
+				console.log(data);
+			},
+			'json'
+		);
 	});
 
 })(jQuery, reactor);
