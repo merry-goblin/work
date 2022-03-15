@@ -11,10 +11,10 @@ class Game extends AbstractComposer implements ComposerInterface
 {
 	protected static $mapperName  = 'MerryGoblin\\Keno\\Models\\Mappers\\Game';
 
-	public CONST BETS_ARE_ALLOWED_STATUS = 1; // Game is open to bets.
-	public CONST DRAW_PENDING_STATUS     = 2; // Draw is pending. No process ongoing. Can be processed.
-	public CONST DRAW_PROCESSING_STATUS  = 3; // A process is happening we can't start another process yet.
-	public CONST FINISHED_STATUS         = 4; // Draw is finished.
+	CONST BETS_ARE_ALLOWED_STATUS = 1; // Game is open to bets.
+	CONST DRAW_PENDING_STATUS     = 2; // Draw is pending. No process ongoing. Can be processed.
+	CONST DRAW_PROCESSING_STATUS  = 3; // A process is happening we can't start another process yet.
+	CONST FINISHED_STATUS         = 4; // Draw is finished.
 
 	public function getCurrentGameOrInsertIfNeeded()
 	{

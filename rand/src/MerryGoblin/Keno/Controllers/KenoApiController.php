@@ -42,7 +42,7 @@ class KenoApiController extends AbstractController
 			$gridComposer = $orm->getComposer('MerryGoblin\Keno\Models\Composers\Grid');
 
 			//	Active game
-			$currentGame = $gameComposer->getCurrentGameOrInsertItNeeded();
+			$currentGame = $gameComposer->getCurrentGameOrInsertIfNeeded();
 			if ($currentGame->status != $gameComposer::BETS_ARE_ALLOWED_STATUS) {
 				throw new DrawInProgressException();
 			}

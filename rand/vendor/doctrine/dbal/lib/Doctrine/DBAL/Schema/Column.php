@@ -1,100 +1,134 @@
 <?php
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.doctrine-project.org>.
+ */
 
 namespace Doctrine\DBAL\Schema;
 
 use Doctrine\DBAL\Types\Type;
-use Doctrine\Deprecations\Deprecation;
-
-use function array_merge;
-use function is_numeric;
-use function method_exists;
 
 /**
  * Object representation of a database column.
+ *
+ * @link   www.doctrine-project.org
+ * @since  2.0
+ * @author Benjamin Eberlei <kontakt@beberlei.de>
  */
 class Column extends AbstractAsset
 {
-    /** @var Type */
+    /**
+     * @var Type
+     */
     protected $_type;
 
-    /** @var int|null */
-    protected $_length;
+    /**
+     * @var integer|null
+     */
+    protected $_length = null;
 
-    /** @var int */
+    /**
+     * @var integer
+     */
     protected $_precision = 10;
 
-    /** @var int */
+    /**
+     * @var integer
+     */
     protected $_scale = 0;
 
-    /** @var bool */
+    /**
+     * @var boolean
+     */
     protected $_unsigned = false;
 
-    /** @var bool */
+    /**
+     * @var boolean
+     */
     protected $_fixed = false;
 
-    /** @var bool */
+    /**
+     * @var boolean
+     */
     protected $_notnull = true;
 
-    /** @var string|null */
-    protected $_default;
+    /**
+     * @var string|null
+     */
+    protected $_default = null;
 
-    /** @var bool */
+    /**
+     * @var boolean
+     */
     protected $_autoincrement = false;
 
-    /** @var mixed[] */
-    protected $_platformOptions = [];
+    /**
+     * @var array
+     */
+    protected $_platformOptions = array();
 
-    /** @var string|null */
-    protected $_columnDefinition;
+    /**
+     * @var string|null
+     */
+    protected $_columnDefinition = null;
 
-    /** @var string|null */
-    protected $_comment;
+    /**
+     * @var string|null
+     */
+    protected $_comment = null;
 
-    /** @var mixed[] */
-    protected $_customSchemaOptions = [];
+    /**
+     * @var array
+     */
+    protected $_customSchemaOptions = array();
 
     /**
      * Creates a new Column.
      *
-     * @param string  $name
-     * @param mixed[] $options
+     * @param string $columnName
+     * @param Type   $type
+     * @param array  $options
      */
-    public function __construct($name, Type $type, array $options = [])
+    public function __construct($columnName, Type $type, array $options=array())
     {
-        $this->_setName($name);
+        $this->_setName($columnName);
         $this->setType($type);
         $this->setOptions($options);
     }
 
     /**
-     * @param mixed[] $options
+     * @param array $options
      *
      * @return Column
      */
     public function setOptions(array $options)
     {
         foreach ($options as $name => $value) {
-            $method = 'set' . $name;
-            if (! method_exists($this, $method)) {
-                // next major: throw an exception
-                Deprecation::trigger(
-                    'doctrine/dbal',
-                    'https://github.com/doctrine/dbal/pull/2846',
-                    'The "%s" column option is not supported,' .
-                    ' setting unknown options is deprecated and will cause an error in Doctrine DBAL 3.0',
-                    $name
-                );
-
-                continue;
+            $method = "set".$name;
+            if (method_exists($this, $method)) {
+                $this->$method($value);
             }
-
-            $this->$method($value);
         }
 
         return $this;
     }
 
     /**
+     * @param Type $type
+     *
      * @return Column
      */
     public function setType(Type $type)
@@ -105,7 +139,7 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @param int|null $length
+     * @param integer|null $length
      *
      * @return Column
      */
@@ -121,13 +155,13 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @param int $precision
+     * @param integer $precision
      *
      * @return Column
      */
     public function setPrecision($precision)
     {
-        if (! is_numeric($precision)) {
+        if (!is_numeric($precision)) {
             $precision = 10; // defaults to 10 when no valid precision is given.
         }
 
@@ -137,13 +171,13 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @param int $scale
+     * @param integer $scale
      *
      * @return Column
      */
     public function setScale($scale)
     {
-        if (! is_numeric($scale)) {
+        if (!is_numeric($scale)) {
             $scale = 0;
         }
 
@@ -153,7 +187,7 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @param bool $unsigned
+     * @param boolean $unsigned
      *
      * @return Column
      */
@@ -165,7 +199,7 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @param bool $fixed
+     * @param boolean $fixed
      *
      * @return Column
      */
@@ -177,7 +211,7 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @param bool $notnull
+     * @param boolean $notnull
      *
      * @return Column
      */
@@ -201,7 +235,7 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @param mixed[] $platformOptions
+     * @param array $platformOptions
      *
      * @return Column
      */
@@ -246,7 +280,7 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @return int|null
+     * @return integer|null
      */
     public function getLength()
     {
@@ -254,7 +288,7 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @return int
+     * @return integer
      */
     public function getPrecision()
     {
@@ -262,7 +296,7 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @return int
+     * @return integer
      */
     public function getScale()
     {
@@ -270,7 +304,7 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function getUnsigned()
     {
@@ -278,7 +312,7 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function getFixed()
     {
@@ -286,7 +320,7 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function getNotnull()
     {
@@ -302,7 +336,7 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @return mixed[]
+     * @return array
      */
     public function getPlatformOptions()
     {
@@ -312,7 +346,7 @@ class Column extends AbstractAsset
     /**
      * @param string $name
      *
-     * @return bool
+     * @return boolean
      */
     public function hasPlatformOption($name)
     {
@@ -338,7 +372,7 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function getAutoincrement()
     {
@@ -346,7 +380,7 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @param bool $flag
+     * @param boolean $flag
      *
      * @return Column
      */
@@ -358,7 +392,7 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @param string|null $comment
+     * @param string $comment
      *
      * @return Column
      */
@@ -393,7 +427,7 @@ class Column extends AbstractAsset
     /**
      * @param string $name
      *
-     * @return bool
+     * @return boolean
      */
     public function hasCustomSchemaOption($name)
     {
@@ -411,7 +445,7 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @param mixed[] $customSchemaOptions
+     * @param array $customSchemaOptions
      *
      * @return Column
      */
@@ -423,7 +457,7 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @return mixed[]
+     * @return array
      */
     public function getCustomSchemaOptions()
     {
@@ -431,11 +465,11 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @return mixed[]
+     * @return array
      */
     public function toArray()
     {
-        return array_merge([
+        return array_merge(array(
             'name'          => $this->_name,
             'type'          => $this->_type,
             'default'       => $this->_default,
@@ -448,6 +482,6 @@ class Column extends AbstractAsset
             'autoincrement' => $this->_autoincrement,
             'columnDefinition' => $this->_columnDefinition,
             'comment' => $this->_comment,
-        ], $this->_platformOptions, $this->_customSchemaOptions);
+        ), $this->_platformOptions, $this->_customSchemaOptions);
     }
 }

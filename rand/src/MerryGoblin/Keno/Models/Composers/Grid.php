@@ -12,8 +12,8 @@ class Grid extends AbstractComposer implements ComposerInterface
 {
 	protected static $mapperName  = 'MerryGoblin\\Keno\\Models\\Mappers\\Grid';
 
-	public CONST GRID_TO_PROCESS_STATUS  = 1;
-	public CONST GRID_PROCESSED_STATUS   = 2;
+	CONST GRID_TO_PROCESS_STATUS  = 1;
+	CONST GRID_PROCESSED_STATUS   = 2;
 
 	public function insertGrid(GameEntity $game, $selectedCells)
 	{

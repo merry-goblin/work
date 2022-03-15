@@ -230,7 +230,7 @@ class Builder
 	 * @param  boolean $exceptionMultipleResultOnFirst
 	 * @return array(Monolith\Casterlith\Entity\EntityInterface)
 	 */
-	public function buildFirst(/*PDOStatement */$statement, $exceptionMultipleResultOnFirst = false)
+	public function buildFirst(/*PDOStatement*/ $statement, $exceptionMultipleResultOnFirst = false)
 	{
 		$this->build($statement);
 
@@ -253,7 +253,7 @@ class Builder
 	 * @param  Doctrine\DBAL\Driver\PDOStatement  $statement [dbal seems to use Doctrine\DBAL\ForwardCompatibility\Result now]
 	 * @return array(Monolith\Casterlith\Entity\EntityInterface)
 	 */
-	public function buildAll(/*PDOStatement */$statement)
+	public function buildAll(/*PDOStatement*/ $statement)
 	{
 		$this->build($statement);
 
@@ -268,9 +268,9 @@ class Builder
 	 * @param  Doctrine\DBAL\Driver\PDOStatement  $statement [dbal seems to use Doctrine\DBAL\ForwardCompatibility\Result now]
 	 * @return array()
 	 */
-	public function buildFirstAsRaw(/*PDOStatement */$statement)
+	public function buildFirstAsRaw(/*PDOStatement*/ $statement)
 	{
-		$row = $statement->fetchObject();
+		$row = $statement->fetchAssociative();
 
 		return $row;
 	}
@@ -279,13 +279,9 @@ class Builder
 	 * @param  Doctrine\DBAL\Driver\PDOStatement  $statement [dbal seems to use Doctrine\DBAL\ForwardCompatibility\Result now]
 	 * @return array()
 	 */
-	public function buildAllAsRaw(/*PDOStatement */$statement)
+	public function buildAllAsRaw(/*PDOStatement*/ $statement)
 	{
-		$rows = array();
-
-		while ($row = $statement->fetchObject()) {
-			$rows[] = $row;
-		}
+		$rows = $statement->fetchAllAssociative();
 
 		return $rows;
 	}
@@ -299,7 +295,7 @@ class Builder
 	 * @param  PDOStatement $statement [dbal seems to use Doctrine\DBAL\ForwardCompatibility\Result now]
 	 * @return null
 	 */
-	protected function build(/*PDOStatement */$statement)
+	protected function build(/*PDOStatement*/ $statement)
 	{
 		$this->completeSelectionWithPrimaryKeys();
 
