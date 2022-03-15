@@ -29,8 +29,8 @@ class Grid extends AbstractComposer implements ComposerInterface
 			'id'      => null,
 			'cells'   => $selectedCells,
 			'gameId'  => $game->id,
-			'status'  => $game->id,
-			'nbFound' => self::GRID_TO_PROCESS_STATUS,
+			'status'  => self::GRID_TO_PROCESS_STATUS,
+			'nbFound' => null,
 		);
 		$dbal->executeUpdate($sql, $values);
 	}
@@ -53,7 +53,7 @@ class Grid extends AbstractComposer implements ComposerInterface
 
 	public function getNumberOfGridsToProcess(GameEntity $game)
 	{
-		$nbGrids = $this
+		$row = $this
 			->selectAsRaw("grid", "count(grid.id) as nb")
 			->where($this->expr()->andX(
 				$this->expr()->eq('grid.gameId', ':gameId'),
@@ -64,6 +64,6 @@ class Grid extends AbstractComposer implements ComposerInterface
 			->first()
 		;
 
-		var_dump($nbGrids);
+		return $row['nb'];
 	}
 }

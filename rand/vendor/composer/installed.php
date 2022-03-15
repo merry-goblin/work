@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '7506a6f05cd2f77bcca6eb04f1d1cd318c232082',
+        'reference' => '0080746265b3767d69449e2ebbc8551df828e54b',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '7506a6f05cd2f77bcca6eb04f1d1cd318c232082',
+            'reference' => '0080746265b3767d69449e2ebbc8551df828e54b',
             'dev_requirement' => false,
         ),
         'doctrine/annotations' => array(
@@ -90,7 +90,7 @@
             'aliases' => array(
                 0 => '9999999-dev',
             ),
-            'reference' => '6209cc75a85334e88f73928983f20a5890a313d0',
+            'reference' => '856ef7112d61ce9c4c19326e6d2103269e64a07e',
             'dev_requirement' => false,
         ),
         'merry-goblin/routerlith' => array(

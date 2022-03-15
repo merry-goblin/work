@@ -29,18 +29,23 @@ class Builder
 
 	protected $num             = 0;
 	protected $customReplacer  = "cl";
+	protected $usePDOStatement = false; // PHP < 7
 
 	protected $rootAlias       = null;
 
 	/**
 	 * @param  Doctrine\DBAL\Query\QueryBuilder  $queryBuilder
 	 * @param  string                            $customReplacer
+	 * @param  boolean                           $usePDOStatement
 	 */
-	public function __construct(QueryBuilder $queryBuilder, $customReplacer)
+	public function __construct(QueryBuilder $queryBuilder, $customReplacer, $usePDOStatement = false)
 	{
 		$this->queryBuilder     = $queryBuilder;
 		$this->connection       = $this->queryBuilder->getConnection();
+
 		$this->customReplacer   = $customReplacer;
+		$this->usePDOStatement  = $usePDOStatement;
+
 		$this->mapperList       = array();
 		$this->jointList        = array();
 		$this->selectionList    = array();
@@ -270,7 +275,12 @@ class Builder
 	 */
 	public function buildFirstAsRaw(/*PDOStatement*/ $statement)
 	{
-		$row = $statement->fetchAssociative();
+		if ($this->usePDOStatement) {
+			$row = $statement->fetch(\PDO::FETCH_ASSOC);
+		}
+		else {
+			$row = $statement->fetchAssociative();
+		}
 
 		return $row;
 	}
@@ -281,7 +291,12 @@ class Builder
 	 */
 	public function buildAllAsRaw(/*PDOStatement*/ $statement)
 	{
-		$rows = $statement->fetchAllAssociative();
+		if ($this->usePDOStatement) {
+			$rows = $statement->fetchAll(\PDO::FETCH_ASSOC);
+		}
+		else {
+			$rows = $statement->fetchAllAssociative();
+		}
 
 		return $rows;
 	}

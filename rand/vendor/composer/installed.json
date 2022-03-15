@@ -531,19 +531,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/merry-goblin/casterlith-composer.git",
-                "reference": "6209cc75a85334e88f73928983f20a5890a313d0"
+                "reference": "856ef7112d61ce9c4c19326e6d2103269e64a07e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/merry-goblin/casterlith-composer/zipball/6209cc75a85334e88f73928983f20a5890a313d0",
-                "reference": "6209cc75a85334e88f73928983f20a5890a313d0",
+                "url": "https://api.github.com/repos/merry-goblin/casterlith-composer/zipball/856ef7112d61ce9c4c19326e6d2103269e64a07e",
+                "reference": "856ef7112d61ce9c4c19326e6d2103269e64a07e",
                 "shasum": ""
             },
             "require": {
                 "doctrine/dbal": "^2.5",
                 "php": ">=5.3.0"
             },
-            "time": "2022-03-15T00:40:20+00:00",
+            "time": "2022-03-15T16:23:04+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
