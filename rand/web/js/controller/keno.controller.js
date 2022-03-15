@@ -87,6 +87,20 @@
 
 	});
 
+	//	UI: draw
+	$('.draw-button').click(function() {
+
+		var jqxhr = $.post(
+			'api/game/draw',
+			null,
+			function(data) {
+				console.log("Draw response");
+				console.log(data);
+			},
+			'json'
+		);
+	});
+
 	//	UI: process
 	$('.draw-process-button').click(function() {
 

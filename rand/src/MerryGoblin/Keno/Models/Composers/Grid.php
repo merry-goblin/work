@@ -30,7 +30,7 @@ class Grid extends AbstractComposer implements ComposerInterface
 			'cells'   => $selectedCells,
 			'gameId'  => $game->id,
 			'status'  => $game->id,
-			'nbFound' => Grid::GRID_SENT_STATUS,
+			'nbFound' => self::GRID_TO_PROCESS_STATUS,
 		);
 		$dbal->executeUpdate($sql, $values);
 	}
@@ -44,7 +44,7 @@ class Grid extends AbstractComposer implements ComposerInterface
 				$this->expr()->eq('grid.status', ':status')
 			))
 			->setParameter('gameId', $game->id)
-			->setParameter('status', Grid::GRID_TO_PROCESS_STATUS)
+			->setParameter('status', self::GRID_TO_PROCESS_STATUS)
 			->limit(0, $max)
 		;
 
@@ -60,7 +60,7 @@ class Grid extends AbstractComposer implements ComposerInterface
 				$this->expr()->eq('grid.status', ':status')
 			))
 			->setParameter('gameId', $game->id)
-			->setParameter('status', Grid::GRID_TO_PROCESS_STATUS)
+			->setParameter('status', self::GRID_TO_PROCESS_STATUS)
 			->first()
 		;
 
