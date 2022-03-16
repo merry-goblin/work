@@ -58,8 +58,9 @@ class KenoProcessor
 		$nb = $gridComposer->getNumberOfGridsToProcess($game);
 
 		if ($nb == 0) {
+			$game->active = false;
 			$game->status = $gameComposer::FINISHED_STATUS;
-			$gameComposer->changeStatus($game);
+			$gameComposer->finishDraw($game);
 		}
 
 		return null;

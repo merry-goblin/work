@@ -97,4 +97,28 @@ class Game extends AbstractComposer implements ComposerInterface
 		);
 		$dbal->executeUpdate($sql, $values);
 	}
+
+	/**
+	 * @param  MerryGoblin\Keno\Models\Entities\Game $game
+	 * @return null
+	 */
+	public function finishDraw($game)
+	{
+		$dbal = $this->getDBALConnection();
+
+		$sql = "
+			UPDATE game
+			SET
+				status = :status,
+				active = :active
+			WHERE id = :id
+		";
+		$values = array(
+			'status' => self::FINISHED_STATUS,
+			'active' => false,
+			'id'     => $game->id,
+		);
+		$dbal->executeUpdate($sql, $values);
+	}
+
 }

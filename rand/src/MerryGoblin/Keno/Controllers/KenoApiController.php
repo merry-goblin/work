@@ -142,14 +142,14 @@ class KenoApiController extends AbstractController
 				}
 
 				$processStatus = 'pending';
+
+				//	Change game status to pending
+				$currentGame->status = $gameComposer::DRAW_PENDING_STATUS;
+				$gameComposer->changeStatus($currentGame);
 			}
 			else {
 				$processStatus = 'finished';
 			}
-
-			//	Change game status to pending
-			$currentGame->status = $gameComposer::DRAW_PENDING_STATUS;
-			$gameComposer->changeStatus($currentGame);
 
 			//	Response: success
 			$response = [
