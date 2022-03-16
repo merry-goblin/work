@@ -66,4 +66,27 @@ class Grid extends AbstractComposer implements ComposerInterface
 
 		return $row['nb'];
 	}
+
+	/**
+	 * @param  MerryGoblin\Keno\Models\Entities\Grid $grid
+	 * @return null
+	 */
+	public function updateAfterDrawProcess($grid)
+	{
+		$dbal = $this->getDBALConnection();
+
+		$sql = "
+			UPDATE grid
+			SET   
+				status = :status,
+				nbFound = :nbFound
+			WHERE id = :id
+		";
+		$values = array(
+			'status'  => $grid->status,
+			'nbFound' => $grid->nbFound,
+			'id'      => $grid->id,
+		);
+		$dbal->executeUpdate($sql, $values);
+	}
 }

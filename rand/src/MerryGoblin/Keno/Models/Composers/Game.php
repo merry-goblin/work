@@ -60,10 +60,9 @@ class Game extends AbstractComposer implements ComposerInterface
 
 	/**
 	 * @param  MerryGoblin\Keno\Models\Entities\Game $game
-	 * @param  integer $status
 	 * @return null
 	 */
-	public function changeGameStatus($game, $status)
+	public function changeStatus($game)
 	{
 		$dbal = $this->getDBALConnection();
 
@@ -73,7 +72,27 @@ class Game extends AbstractComposer implements ComposerInterface
 			WHERE id = :id
 		";
 		$values = array(
-			'status' => $status,
+			'status' => $game->status,
+			'id'     => $game->id,
+		);
+		$dbal->executeUpdate($sql, $values);
+	}
+
+	/**
+	 * @param  MerryGoblin\Keno\Models\Entities\Game $game
+	 * @return null
+	 */
+	public function changeCells($game)
+	{
+		$dbal = $this->getDBALConnection();
+
+		$sql = "
+			UPDATE game
+			SET   cells = :cells
+			WHERE id = :id
+		";
+		$values = array(
+			'cells' => $game->cells,
 			'id'     => $game->id,
 		);
 		$dbal->executeUpdate($sql, $values);

@@ -13,28 +13,55 @@ class KenoProcessor
 		$this->casterlithService = $casterlithService;
 	}
 
+	/**
+	 * @param  MerryGoblin\Keno\Models\Entities\Game $game
+	 * @return [type]       [description]
+	 */
 	public function process($game)
 	{
+		$nbProcessed = 0;
+
 		//	ORM
 		$orm = $this->casterlithService->getConnection('keno');
 		$gridComposer = $orm->getComposer('MerryGoblin\Keno\Models\Composers\Grid');
 
-		$grids = $gridComposer->getGridsToProcess($game, $max);
-		foreach ($grids as $grid) {
+		//	Selected game cells
+		$gameCells = json_decode($game->cells, true);
 
+		$grids = $gridComposer->getGridsToProcess($game, $this->numberOfGridToHandleByLot);
+		foreach ($grids as $grid) {
+			$gridCells = json_decode($grid->cells, true);
+			$intersect = array_intersect($gameCells, $gridCells);
+
+			//	Update grid
+			$grid->status  = $gridComposer::GRID_PROCESSED_STATUS;
+			$grid->nbFound = count($intersect);
+			$gridComposer->updateAfterDrawProcess($grid);
+
+			$nbProcessed++;
 		}
 
-		return 0;
+		return $nbProcessed;
 	}
 
+	/**
+	 * @param  MerryGoblin\Keno\Models\Entities\Game $game
+	 * @return null
+	 */
 	public function verifyProcessStatus($game)
 	{
 		//	ORM
 		$orm = $this->casterlithService->getConnection('keno');
+		$gameComposer = $orm->getComposer('MerryGoblin\Keno\Models\Composers\Game');
 		$gridComposer = $orm->getComposer('MerryGoblin\Keno\Models\Composers\Grid');
 
 		$nb = $gridComposer->getNumberOfGridsToProcess($game);
 
-		return $nb;
+		if ($nb == 0) {
+			$game->status = $gameComposer::FINISHED_STATUS;
+			$gameComposer->changeStatus($game);
+		}
+
+		return null;
 	}
 }

@@ -17,6 +17,7 @@ class KenoApiController extends AbstractController
 {
 	public function getARandomGridAction($nb)
 	{
+		//	Services
 		$randomizerService = new Randomizer();
 
 		$randomList = $randomizerService->getRandomIntegerList($nb, 1, 70, false, true);
@@ -36,12 +37,12 @@ class KenoApiController extends AbstractController
 			//	Input paramaters
 			$input = json_decode(file_get_contents('php://input'), true);
 
-			//	ORM
+			//	Services
 			$orm = $this->casterlithService->getConnection('keno');
 			$gameComposer = $orm->getComposer('MerryGoblin\Keno\Models\Composers\Game');
 			$gridComposer = $orm->getComposer('MerryGoblin\Keno\Models\Composers\Grid');
 
-			//	Active game
+			//	Get the active game
 			$currentGame = $gameComposer->getCurrentGameOrInsertIfNeeded();
 			if ($currentGame->status != $gameComposer::BETS_ARE_ALLOWED_STATUS) {
 				throw new DrawInProgressException();
@@ -68,21 +69,27 @@ class KenoApiController extends AbstractController
 	public function postGameDrawAction()
 	{
 		try {
-			//	ORM
+			//	Services
+			$randomizerService = new Randomizer();
 			$orm = $this->casterlithService->getConnection('keno');
 			$gameComposer = $orm->getComposer('MerryGoblin\Keno\Models\Composers\Game');
 
-			//	Active game
+			//	Get the active game
 			$currentGame = $gameComposer->getCurrentGameOrInsertIfNeeded();
 			if ($currentGame->status != $gameComposer::BETS_ARE_ALLOWED_STATUS) {
 				throw new DrawInProgressException();
 			}
 
+			//	Draw 20 numbers out of 70
+			$randomList = $randomizerService->getRandomIntegerList(20, 1, 70, false, true);
+			$currentGame->cells = json_encode($randomList);
+			$gameComposer->changeCells($currentGame);
+
 			//	Change game status to :
 			//	 - prevent any more bets
 			//	 - to process the draw with a cron
-			$status = $gameComposer::DRAW_PENDING_STATUS;
-			$gameComposer->changeGameStatus($currentGame, $status);
+			$currentGame->status = $gameComposer::DRAW_PENDING_STATUS;
+			$gameComposer->changeStatus($currentGame);
 
 			//	Response: success
 			$response = [
@@ -106,7 +113,7 @@ class KenoApiController extends AbstractController
 			$orm = $this->casterlithService->getConnection('keno');
 			$gameComposer = $orm->getComposer('MerryGoblin\Keno\Models\Composers\Game');
 
-			//	Active game
+			//	Get the active game
 			$currentGame = $gameComposer->getCurrentGameOrInsertIfNeeded();
 			if ($currentGame->status == $gameComposer::DRAW_PROCESSING_STATUS) {
 				throw new DrawIsProcessingException();
@@ -116,25 +123,33 @@ class KenoApiController extends AbstractController
 			}
 
 			//	Change game status to processing
-			$status = $gameComposer::DRAW_PROCESSING_STATUS;
-			$gameComposer->changeGameStatus($currentGame, $status);
+			$currentGame->status = $gameComposer::DRAW_PROCESSING_STATUS;
+			$gameComposer->changeStatus($currentGame);
 
 			//	Processing
 			$kenoProcessor = new KenoProcessor($this->casterlithService);
 			$kenoProcessor->verifyProcessStatus($currentGame);
-			exit();
-			while (true) {
-				$nbProcessed = $kenoProcessor->process($currentGame);
-				if ($nbProcessed > 0) {
-					break;
+			
+			if ($currentGame->status == $gameComposer::DRAW_PROCESSING_STATUS) {
+				while (true) {
+					$nbProcessed = $kenoProcessor->process($currentGame);
+					if ($nbProcessed == 0) {
+						break;
+					}
+					if ($timer->getFullTime() > 20) {
+						break;
+					}
 				}
+
+				$processStatus = 'pending';
+			}
+			else {
+				$processStatus = 'finished';
 			}
 
-			$processStatus = 'pending'; // 'finished'
-
 			//	Change game status to pending
-			$status = $gameComposer::DRAW_PENDING_STATUS;
-			$gameComposer->changeGameStatus($currentGame, $status);
+			$currentGame->status = $gameComposer::DRAW_PENDING_STATUS;
+			$gameComposer->changeStatus($currentGame);
 
 			//	Response: success
 			$response = [
