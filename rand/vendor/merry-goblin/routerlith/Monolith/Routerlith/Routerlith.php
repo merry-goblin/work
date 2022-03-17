@@ -41,7 +41,12 @@ class Routerlith
 		$requestUrl    = Utils::getRequestUrl();
 		$requestMethod = Utils::getRequestMethod();
 
-		return $this->getRoute($requestUrl, $requestMethod);
+		$route = $this->getRoute($requestUrl, $requestMethod);
+		if (is_null($route)) {
+			throw new \Exception("url: `".$requestUrl."` not found with method: `".$requestMethod."`");
+		}
+
+		return $route;
 	}
 
 	/**

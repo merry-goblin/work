@@ -1,8 +1,10 @@
 <?php
 
-namespace MerryGoblin\Keno\Services;
+namespace MerryGoblin\Keno\Services\Keno;
 
-class KenoProcessor
+use MerryGoblin\Keno\Models\Entities\Game as GameEntity;
+
+class KenoAnalytics
 {
 	protected $casterlithService = null;
 
@@ -11,5 +13,12 @@ class KenoProcessor
 		$this->casterlithService = $casterlithService;
 	}
 
-	
+	public function addGameToStatistics(GameEntity $game)
+	{
+		//	ORM
+		$orm = $this->casterlithService->getConnection('keno');
+		$gameStatisticsComposer = $orm->getComposer('MerryGoblin\Keno\Models\Composers\GameStatistics');
+
+		$gameStatisticsComposer->addGameToStatistics($game);
+	}	
 }

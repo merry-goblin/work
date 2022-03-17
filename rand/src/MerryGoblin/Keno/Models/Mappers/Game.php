@@ -13,8 +13,8 @@ class Game extends AbstractMapper implements MapperInterface
 	protected static $table      = 'game';
 	protected static $entity     = 'MerryGoblin\Keno\Models\Entities\Game';
 	protected static $fields     = array(
-		'id'    => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
-		'cells' => array('type' => 'string'),
+		'id'     => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
+		'cells'  => array('type' => 'string'),
 		'active' => array('type' => 'boolean'),
 		'status' => array('type' => 'integer'),
 	);

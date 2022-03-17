@@ -6,6 +6,10 @@ namespace MerryGoblin\Keno\Controllers;
 use MerryGoblin\Keno\Services\Randomizer;
 use MerryGoblin\Keno\Services\Timer;
 use MerryGoblin\Keno\Services\Keno\KenoProcessor;
+use MerryGoblin\Keno\Services\Keno\KenoAnalytics;
+
+//	Model composers
+use MerryGoblin\Keno\Models\Composers\Game as GameComposer;
 
 //	Exceptions
 use MerryGoblin\Keno\Exceptions\DrawInProgressException;
@@ -43,7 +47,7 @@ class KenoApiController extends AbstractController
 			$gridComposer = $orm->getComposer('MerryGoblin\Keno\Models\Composers\Grid');
 
 			//	Get the active game
-			$currentGame = $gameComposer->getCurrentGameOrInsertIfNeeded();
+			$currentGame = $this->getCurrentGameOrInsertIfNeeded($gameComposer);
 			if ($currentGame->status != $gameComposer::BETS_ARE_ALLOWED_STATUS) {
 				throw new DrawInProgressException();
 			}
@@ -75,7 +79,7 @@ class KenoApiController extends AbstractController
 			$gameComposer = $orm->getComposer('MerryGoblin\Keno\Models\Composers\Game');
 
 			//	Get the active game
-			$currentGame = $gameComposer->getCurrentGameOrInsertIfNeeded();
+			$currentGame = $this->getCurrentGameOrInsertIfNeeded($gameComposer);
 			if ($currentGame->status != $gameComposer::BETS_ARE_ALLOWED_STATUS) {
 				throw new DrawInProgressException();
 			}
@@ -114,7 +118,7 @@ class KenoApiController extends AbstractController
 			$gameComposer = $orm->getComposer('MerryGoblin\Keno\Models\Composers\Game');
 
 			//	Get the active game
-			$currentGame = $gameComposer->getCurrentGameOrInsertIfNeeded();
+			$currentGame = $this->getCurrentGameOrInsertIfNeeded($gameComposer);
 			if ($currentGame->status == $gameComposer::DRAW_PROCESSING_STATUS) {
 				throw new DrawIsProcessingException();
 			}
@@ -166,4 +170,26 @@ class KenoApiController extends AbstractController
 			return $this->handleAPIException($e);
 		}
 	}
+
+	protected function getCurrentGameOrInsertIfNeeded(GameComposer $gameComposer)
+	{
+		//	Select
+		$currentGame = $gameComposer->getCurrentGame();
+		if (is_null($currentGame)) {
+			//	Insert
+			$currentGame = $gameComposer->insertANewGame();
+			//	Statistics
+			$this->addGameToStatistics($currentGame);
+		}
+
+		return $currentGame;
+	}
+
+	protected function addGameToStatistics($game)
+	{
+		//	Processing
+		$kenoAnalytics = new KenoAnalytics($this->casterlithService);
+		$kenoAnalytics->addGameToStatistics($game);
+	}
+
 }

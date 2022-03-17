@@ -9,29 +9,29 @@ class ComposerStaticInit70220d826bc88a8b912e3921ec19b91c
     public static $prefixLengthsPsr4 = array (
         'D' => 
         array (
-            'Doctrine\\Common\\Lexer\\' => 22,
+            'Doctrine\\Deprecations\\' => 22,
+            'Doctrine\\DBAL\\' => 14,
             'Doctrine\\Common\\Cache\\' => 22,
-            'Doctrine\\Common\\Annotations\\' => 28,
             'Doctrine\\Common\\' => 16,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Doctrine\\Common\\Lexer\\' => 
+        'Doctrine\\Deprecations\\' => 
         array (
-            0 => __DIR__ . '/..' . '/doctrine/lexer/lib/Doctrine/Common/Lexer',
+            0 => __DIR__ . '/..' . '/doctrine/deprecations/lib/Doctrine/Deprecations',
+        ),
+        'Doctrine\\DBAL\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/dbal/lib/Doctrine/DBAL',
         ),
         'Doctrine\\Common\\Cache\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache',
         ),
-        'Doctrine\\Common\\Annotations\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/doctrine/annotations/lib/Doctrine/Common/Annotations',
-        ),
         'Doctrine\\Common\\' => 
         array (
-            0 => __DIR__ . '/..' . '/doctrine/common/lib/Doctrine/Common',
+            0 => __DIR__ . '/..' . '/doctrine/event-manager/lib/Doctrine/Common',
         ),
     );
 
@@ -49,21 +49,6 @@ class ComposerStaticInit70220d826bc88a8b912e3921ec19b91c
             'Monolith\\Casterlith\\' => 
             array (
                 0 => __DIR__ . '/..' . '/merry-goblin/casterlith',
-            ),
-        ),
-        'D' => 
-        array (
-            'Doctrine\\DBAL\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/doctrine/dbal/lib',
-            ),
-            'Doctrine\\Common\\Inflector\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/doctrine/inflector/lib',
-            ),
-            'Doctrine\\Common\\Collections\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/doctrine/collections/lib',
             ),
         ),
     );

@@ -8,7 +8,4 @@ $baseDir = dirname($vendorDir);
 return array(
     'Monolith\\Routerlith\\' => array($vendorDir . '/merry-goblin/routerlith'),
     'Monolith\\Casterlith\\' => array($vendorDir . '/merry-goblin/casterlith'),
-    'Doctrine\\DBAL\\' => array($vendorDir . '/doctrine/dbal/lib'),
-    'Doctrine\\Common\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib'),
-    'Doctrine\\Common\\Collections\\' => array($vendorDir . '/doctrine/collections/lib'),
 );
