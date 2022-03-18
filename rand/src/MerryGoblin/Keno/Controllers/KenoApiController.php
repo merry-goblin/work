@@ -200,10 +200,13 @@ class KenoApiController extends AbstractController
 	{
 		//	ORM
 		$orm = $this->casterlithService->getConnection('keno');
-		$gameComposerStatistics = $orm->getComposer('MerryGoblin\Keno\Models\Composers\GameStatistics');
+		$gameStatisticsComposer = $orm->getComposer('MerryGoblin\Keno\Models\Composers\GameStatistics');
+		$foundOnGameStatisticsComposer = $orm->getComposer('MerryGoblin\Keno\Models\Composers\FoundOnGameStatistics');
 
 		//	Prepare statistics for this game
-		$gameComposerStatistics->addGameToStatistics($game);
+		$gameStatisticsComposer->addGameToStatistics($game);
+		$gameStatistics = $gameStatisticsComposer->getCurrentGameStatistics();
+		$foundOnGameStatisticsComposer->prerateRowsForAGameStatistics($gameStatistics);
 
 		return null;
 	}

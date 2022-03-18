@@ -18,6 +18,8 @@ class Grid extends AbstractMapper implements MapperInterface
 		'id'    => array('type' => 'integer', 'primary' => true, 'autoincrement' => true),
 		'cells' => array('type' => 'string'),
 		'gameId' => array('type' => 'integer'),
+		'status' => array('type' => 'integer'),
+		'nbFound' => array('type' => 'integer'),
 	);
 	protected static $relations   = null;
 

@@ -12,6 +12,19 @@ class GameStatistics extends AbstractComposer implements ComposerInterface
 {
 	protected static $mapperName  = 'MerryGoblin\\Keno\\Models\\Mappers\\GameStatistics';
 
+	public function getCurrentGameStatistics()
+	{
+		$currentGameStatistics = $this
+			->select('gameStistics', 'game')
+			->innerJoin('gameStistics', 'game', 'game')
+			->where($this->expr()->eq('game.active', ':active'))
+			->setParameter('active', true)
+			->first()
+		;
+
+		return $currentGameStatistics;
+	}
+
 	public function addGameToStatistics(GameEntity $game)
 	{
 		$dbal = $this->getDBALConnection();

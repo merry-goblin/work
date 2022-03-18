@@ -8,6 +8,8 @@ use Monolith\Casterlith\Mapper\MapperInterface;
 use Monolith\Casterlith\Relations\OneToMany;
 use Monolith\Casterlith\Relations\ManyToOne;
 
+use MerryGoblin\Keno\Models\Mappers\Game as GameMapper;
+
 class GameStatistics extends AbstractMapper implements MapperInterface
 {
 	protected static $table      = 'game_statistics';

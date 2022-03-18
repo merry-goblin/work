@@ -2,6 +2,13 @@
 
 namespace MerryGoblin\Keno\Services;
 
+//	Model composers
+use MerryGoblin\Keno\Models\Composers\GameStatistics as GameStatisticsComposer;
+use MerryGoblin\Keno\Models\Composers\FoundOnGameStatistics as FoundOnGameStatisticsComposer;
+
+//	Model entities
+use MerryGoblin\Keno\Models\Entities\Grid as GridEntity;
+
 class KenoProcessor
 {
 	protected $casterlithService = null;
@@ -38,6 +45,9 @@ class KenoProcessor
 			$grid->nbFound = count($intersect);
 			$gridComposer->updateAfterDrawProcess($grid);
 
+			//	Statistics
+			$this->updateStatisticsOfGridComparison($grid);
+
 			$nbProcessed++;
 		}
 
@@ -67,19 +77,22 @@ class KenoProcessor
 	}
 
 	/**
-	 * @param  MerryGoblin\Keno\Models\Entities\Game $game
+	 * @param  MerryGoblin\Keno\Models\Entities\Grid $grid
 	 * @return null
 	 */
-	protected function updateGridComparisonToStatistics(GameEntity $game)
+	protected function updateStatisticsOfGridComparison(GridEntity $grid)
 	{
 		//	ORM
 		$orm = $this->casterlithService->getConnection('keno');
-		$gameComposerStatistics = $orm->getComposer('MerryGoblin\Keno\Models\Composers\GameStatistics');
+		$gameStatisticsComposer = $orm->getComposer('MerryGoblin\Keno\Models\Composers\GameStatistics');
+		$foundOnGameStatisticsComposer = $orm->getComposer('MerryGoblin\Keno\Models\Composers\FoundOnGameStatistics');
 
-		//	Prepare statistics for this game
-		$gameComposerStatistics->addGameToStatistics($game);
+		//	Get game statistics of the active game
+		$currentGameStatistics = $gameStatisticsComposer->getCurrentGameStatistics();
+
+		//	Increment by one a row
+		$foundOnGameStatisticsComposer->incrementNumberFoundByOne($currentGameStatistics, $grid->nbFound);
 
 		return null;
 	}
-
 }
