@@ -24,6 +24,6 @@ CREATE TABLE "game_statistics" (
 CREATE TABLE "found_on_game_statistics" (
 	"id"               INTEGER PRIMARY KEY AUTOINCREMENT,
 	"gameStatisticsId" INTEGER,
-	"found"            INTEGER,
+	"number"           INTEGER,
 	"count"            INTEGER
 );

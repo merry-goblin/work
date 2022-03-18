@@ -5,11 +5,13 @@ namespace MerryGoblin\Keno\Controllers;
 //	Services
 use MerryGoblin\Keno\Services\Randomizer;
 use MerryGoblin\Keno\Services\Timer;
-use MerryGoblin\Keno\Services\Keno\KenoProcessor;
-use MerryGoblin\Keno\Services\Keno\KenoAnalytics;
+use MerryGoblin\Keno\Services\KenoProcessor;
 
 //	Model composers
 use MerryGoblin\Keno\Models\Composers\Game as GameComposer;
+
+//	Model entities
+use MerryGoblin\Keno\Models\Entities\Game as GameEntity;
 
 //	Exceptions
 use MerryGoblin\Keno\Exceptions\DrawInProgressException;
@@ -56,6 +58,7 @@ class KenoApiController extends AbstractController
 			foreach ($input['grids'] as $grid) {
 				$gridComposer->insertGrid($currentGame, json_encode($grid));
 			}
+			$this->updateStatisticsOfNbGridSent($currentGame, count($input['grids']));
 
 			//	Response: success
 			$response = [
@@ -171,6 +174,10 @@ class KenoApiController extends AbstractController
 		}
 	}
 
+	/**
+	 * @param  MerryGoblin\Keno\Models\Composers\Game $gameComposer
+	 * @return MerryGoblin\Keno\Models\Entities\Game
+	 */
 	protected function getCurrentGameOrInsertIfNeeded(GameComposer $gameComposer)
 	{
 		//	Select
@@ -185,11 +192,36 @@ class KenoApiController extends AbstractController
 		return $currentGame;
 	}
 
-	protected function addGameToStatistics($game)
+	/**
+	 * @param  MerryGoblin\Keno\Models\Entities\Game $game
+	 * @return null
+	 */
+	protected function addGameToStatistics(GameEntity $game)
 	{
-		//	Processing
-		$kenoAnalytics = new KenoAnalytics($this->casterlithService);
-		$kenoAnalytics->addGameToStatistics($game);
+		//	ORM
+		$orm = $this->casterlithService->getConnection('keno');
+		$gameComposerStatistics = $orm->getComposer('MerryGoblin\Keno\Models\Composers\GameStatistics');
+
+		//	Prepare statistics for this game
+		$gameComposerStatistics->addGameToStatistics($game);
+
+		return null;
 	}
 
+	/**
+	 * @param  MerryGoblin\Keno\Models\Entities\Game $game
+	 * @param  integer $increment
+	 * @return null
+	 */
+	protected function updateStatisticsOfNbGridSent($game, $increment)
+	{
+		//	ORM
+		$orm = $this->casterlithService->getConnection('keno');
+		$gameComposerStatistics = $orm->getComposer('MerryGoblin\Keno\Models\Composers\GameStatistics');
+
+		//	Prepare statistics for this game
+		$gameComposerStatistics->incrementGridNumber($game, $increment);
+
+		return null;
+	}
 }

@@ -10,4 +10,6 @@ class Grid implements EntityInterface
 	public $id = null;
 	public $cells = null;
 	public $gameId = null;
+
+	public $game  = Casterlith::NOT_LOADED;
 }

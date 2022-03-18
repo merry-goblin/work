@@ -32,6 +32,11 @@ class Game extends AbstractComposer implements ComposerInterface
 	{
 		$dbal = $this->getDBALConnection();
 
+		$game = new GameEntity();
+		$game->cells  = null;
+		$game->active = true;
+		$game->status = 1;
+
 		$sql = "
 			INSERT INTO game
 				(`id`, `cells`, `active`, `status`)
@@ -45,6 +50,10 @@ class Game extends AbstractComposer implements ComposerInterface
 			'status' => 1,
 		);
 		$dbal->executeUpdate($sql, $values);
+
+		$game->id = $dbal->lastInsertId();
+
+		return $game;
 	}
 
 	/**

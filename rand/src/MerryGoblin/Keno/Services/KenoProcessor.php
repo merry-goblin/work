@@ -1,6 +1,6 @@
 <?php
 
-namespace MerryGoblin\Keno\Services\Keno;
+namespace MerryGoblin\Keno\Services;
 
 class KenoProcessor
 {
@@ -65,4 +65,21 @@ class KenoProcessor
 
 		return null;
 	}
+
+	/**
+	 * @param  MerryGoblin\Keno\Models\Entities\Game $game
+	 * @return null
+	 */
+	protected function updateGridComparisonToStatistics(GameEntity $game)
+	{
+		//	ORM
+		$orm = $this->casterlithService->getConnection('keno');
+		$gameComposerStatistics = $orm->getComposer('MerryGoblin\Keno\Models\Composers\GameStatistics');
+
+		//	Prepare statistics for this game
+		$gameComposerStatistics->addGameToStatistics($game);
+
+		return null;
+	}
+
 }

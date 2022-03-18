@@ -28,7 +28,7 @@ class GameStatistics extends AbstractMapper implements MapperInterface
 	{
 		if (is_null(self::$relations)) {
 			self::$relations = array(
-				
+				'game' => new ManyToOne(new GameMapper(), 'gameStatistics', 'game', '`gameStatistics`.gameId = `game`.id', null),
 			);
 		}
 

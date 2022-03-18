@@ -29,4 +29,20 @@ class GameStatistics extends AbstractComposer implements ComposerInterface
 		);
 		$dbal->executeUpdate($sql, $values);
 	}
+
+	public function incrementGridNumber(GameEntity $game, $increment)
+	{
+		$dbal = $this->getDBALConnection();
+
+		$sql = "
+			UPDATE game_statistics
+			SET nbGrids = nbGrids + :increment
+			WHERE gameId = :gameId
+		";
+		$values = array(
+			'increment' => $increment,
+			'gameId'    => $game->id,
+		);
+		$dbal->executeUpdate($sql, $values);
+	}
 }
