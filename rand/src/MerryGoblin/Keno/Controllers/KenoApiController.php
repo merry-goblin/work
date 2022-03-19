@@ -102,6 +102,9 @@ class KenoApiController extends AbstractController
 			$response = [
 				'code'    => 0,
 				'message' => "Success",
+				'data'    => [
+					'gameId' => $currentGame->id,
+				],
 			];
 			return $this->handleAPISuccess($response);
 		}
@@ -163,7 +166,32 @@ class KenoApiController extends AbstractController
 				'code'    => 0,
 				'message' => "Success",
 				'data'    => [
+					'gameId'  => $currentGame->id,
 					'process' => $processStatus,
+				],
+			];
+			return $this->handleAPISuccess($response);
+		}
+		catch (\Exception $e) {
+			//	Response: error
+			return $this->handleAPIException($e);
+		}
+	}
+
+	/**
+	 * @param  integer $id
+	 * @return string
+	 */
+	public function getGameResultAction($id)
+	{
+		try {
+			
+			//	Response: success
+			$response = [
+				'code'    => 0,
+				'message' => "Success",
+				'data'    => [
+					'todo'  => 'todo',
 				],
 			];
 			return $this->handleAPISuccess($response);

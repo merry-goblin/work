@@ -44,6 +44,13 @@ $routing = array(
 			'methods'   => 'GET,POST',
 			'roles'     => 'anonymous',
 		),
+		//	Get game result after process is finished
+		'getGameResult' => array(
+			'path'      => 'api/game/{id}/result',
+			'action'    => 'MerryGoblin\Keno\Controllers\KenoApiController.getGameResultAction',
+			'methods'   => 'GET',
+			'roles'     => 'anonymous',
+		),
 	),
 );
 

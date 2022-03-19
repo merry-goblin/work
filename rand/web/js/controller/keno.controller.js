@@ -73,15 +73,15 @@
 	reactor.addEventListener('button-fill-grid-randomly-clicked', function(params) {
 
 		grids["num"+params.gridNumber].reset();
-		$ressource = 'api/player/grid/random/10';
-		let jqxhr = $.get($ressource, function(response) {
+		$resource = 'api/player/grid/random/10';
+		let jqxhr = $.get($resource, function(response) {
 
 			let numberList = response.data;
 			if (Array.isArray(numberList)) {
 				grids["num"+params.gridNumber].selectCells(numberList);
 			}
 			else {
-				console.log("An error occured. Ressource "+$ressource+" didn't sent back an expected response");
+				console.log("An error occured. Resource "+$resource+" didn't sent back an expected response");
 			}
 		});
 
@@ -107,12 +107,24 @@
 		var jqxhr = $.post(
 			'api/game/draw/process',
 			null,
-			function(data) {
-				console.log("Draw process response");
-				console.log(data);
+			function(response) {
+				if (response.data.process == 'finished') {
+					reactor.dispatchEvent('draw_prossessing_finished', {gameId: response.data.gameId});
+				}
 			},
 			'json'
 		);
+	});
+
+	reactor.registerEvent('draw_prossessing_finished');
+	reactor.addEventListener('draw_prossessing_finished', function(params) {
+
+		$resource = 'api/game/'+params.gameId+'/result';
+		let jqxhr = $.get($resource, function(response) {
+
+			console.log(response);
+		});
+
 	});
 
 })(jQuery, reactor);
