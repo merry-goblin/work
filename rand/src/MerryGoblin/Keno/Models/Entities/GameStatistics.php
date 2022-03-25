@@ -12,4 +12,5 @@ class GameStatistics implements EntityInterface
 	public $nbGrids = null;
 
 	public $game = Casterlith::NOT_LOADED;
+	public $statisticsOfFoundList = Casterlith::NOT_LOADED;
 }

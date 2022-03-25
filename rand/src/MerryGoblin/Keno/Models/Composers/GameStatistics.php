@@ -25,6 +25,19 @@ class GameStatistics extends AbstractComposer implements ComposerInterface
 		return $currentGameStatistics;
 	}
 
+	public function getGameStatisticsByGameId($gameId)
+	{
+		$gameStatistics = $this
+			->select('gameStistics', 'game')
+			->innerJoin('gameStistics', 'foundOnGameStatistics', 'statisticsOfFoundList')
+			->where($this->expr()->eq('gameStistics.gameId', ':gameId'))
+			->setParameter('gameId', $gameId)
+			->first()
+		;
+
+		return $gameStatistics;
+	}
+
 	public function addGameToStatistics(GameEntity $game)
 	{
 		$dbal = $this->getDBALConnection();
