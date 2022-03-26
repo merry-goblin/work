@@ -122,7 +122,7 @@
 		$resource = 'api/game/'+params.gameId+'/result';
 		let jqxhr = $.get($resource, function(response) {
 
-			console.log(response);
+			
 		});
 
 	});

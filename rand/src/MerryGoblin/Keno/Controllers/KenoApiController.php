@@ -199,8 +199,17 @@ class KenoApiController extends AbstractController
 				'data'    => [
 					'gameId'        => $id,
 					'nbPlayedGrids' => $gameStatistics->nbGrids,
+					'stats'         => [],
 				],
 			];
+
+			foreach ($gameStatistics->statisticsOfFoundList as $foundOnGameStatistics) {
+				$response['data']['stats'][] = [
+					'nbFound' => $foundOnGameStatistics->number,
+					'count'   => $foundOnGameStatistics->count,
+				];
+			}
+
 			return $this->handleAPISuccess($response);
 		}
 		catch (\Exception $e) {
