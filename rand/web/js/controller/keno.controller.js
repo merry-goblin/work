@@ -1,15 +1,16 @@
 
 (function($, reactor) {
 
-	let settings = {
-		nbCells: 70,
-		maxSelectableCells: 10
-	};
-
 	//	All the grids
 	var grids = {};
+	var result = new merryGoblin.drawResult();
 
 	function newGrid() {
+
+		let settings = {
+			nbCells: 70,
+			maxSelectableCells: 10
+		};
 
 		//	Build a new grid
 		let grid = new merryGoblin.drawGrid(settings);
