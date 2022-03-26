@@ -15,8 +15,8 @@ class GameStatistics extends AbstractComposer implements ComposerInterface
 	public function getCurrentGameStatistics()
 	{
 		$currentGameStatistics = $this
-			->select('gameStistics', 'game')
-			->innerJoin('gameStistics', 'game', 'game')
+			->select('gameStatistics', 'game')
+			->innerJoin('gameStatistics', 'game', 'game')
 			->where($this->expr()->eq('game.active', ':active'))
 			->setParameter('active', true)
 			->first()
@@ -28,13 +28,12 @@ class GameStatistics extends AbstractComposer implements ComposerInterface
 	public function getGameStatisticsByGameId($gameId)
 	{
 		$gameStatistics = $this
-			->select('gameStistics', 'game')
-			->innerJoin('gameStistics', 'foundOnGameStatistics', 'statisticsOfFoundList')
-			->where($this->expr()->eq('gameStistics.gameId', ':gameId'))
+			->select('gameStatistics', 'foundOnGameStatistics')
+			->innerJoin('gameStatistics', 'foundOnGameStatistics', 'statisticsOfFoundList')
+			->where($this->expr()->eq('gameStatistics.gameId', ':gameId'))
 			->setParameter('gameId', $gameId)
 			->first()
 		;
-
 		return $gameStatistics;
 	}
 

@@ -9,6 +9,7 @@ use Monolith\Casterlith\Relations\OneToMany;
 use Monolith\Casterlith\Relations\ManyToOne;
 
 use MerryGoblin\Keno\Models\Mappers\Game as GameMapper;
+use MerryGoblin\Keno\Models\Mappers\FoundOnGameStatistics as FoundOnGameStatisticsMapper;
 
 class GameStatistics extends AbstractMapper implements MapperInterface
 {
@@ -31,7 +32,7 @@ class GameStatistics extends AbstractMapper implements MapperInterface
 		if (is_null(self::$relations)) {
 			self::$relations = array(
 				'game'                  => new ManyToOne(new GameMapper(), 'gameStatistics', 'game', '`gameStatistics`.gameId = `game`.id', null),
-				'statisticsOfFoundList' => new OneToMany(new GameMapper(), 'gameStatistics', 'foundOnGameStatistics', '`gameStatistics`.id = `foundOnGameStatistics`.gameStatisticsId', null),
+				'statisticsOfFoundList' => new OneToMany(new FoundOnGameStatisticsMapper(), 'gameStatistics', 'foundOnGameStatistics', '`gameStatistics`.id = `foundOnGameStatistics`.gameStatisticsId', null),
 			);
 		}
 

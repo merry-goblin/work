@@ -190,14 +190,15 @@ class KenoApiController extends AbstractController
 			$orm = $this->casterlithService->getConnection('keno');
 			$gameStatisticsComposer = $orm->getComposer('MerryGoblin\Keno\Models\Composers\GameStatistics');
 
-			
+			$gameStatistics = $gameStatisticsComposer->getGameStatisticsByGameId($id);
 
 			//	Response: success
 			$response = [
 				'code'    => 0,
 				'message' => "Success",
 				'data'    => [
-					'todo'  => 'todo',
+					'gameId'        => $id,
+					'nbPlayedGrids' => $gameStatistics->nbGrids,
 				],
 			];
 			return $this->handleAPISuccess($response);
