@@ -3,6 +3,8 @@
 
 	//	All the grids
 	var grids = {};
+
+	//	Displayable result
 	var result = new merryGoblin.drawResult();
 
 	function newGrid() {
@@ -123,7 +125,7 @@
 		$resource = 'api/game/'+params.gameId+'/result';
 		let jqxhr = $.get($resource, function(response) {
 
-			
+			result.displayStatistics(response.data);
 		});
 
 	});

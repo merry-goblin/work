@@ -200,12 +200,20 @@ html, body {
 
 }
 
-/****************************/
-/** Result on current game **/
+/*************************/
+/** Result of last draw **/
 
 .result-block {
 	width: 75%;
 	padding: 20px;
 	background-color: #ddd;
 	color: #333;
+}
+
+.result-block tr.positive {
+	background-color: #dde6dd;
+}
+
+.result-block tr.positive td.count {
+	color: green;
 }

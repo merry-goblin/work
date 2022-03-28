@@ -34,7 +34,17 @@ var merryGoblin = merryGoblin || {};
 
 		function fillContainer(statistics) {
 
+			let resultContent = "<b>number of sent grid:</b> "+statistics.nbPlayedGrids+"<br>";
 
+			resultContent += "<table class='table'><thead><tr><th>Numbers that match draw</th><th>Count</th></tr></thead><tbody>";
+			for (var i=0, ln=statistics.stats.length; i<ln; i++) {
+				let nbStat = statistics.stats[i];
+				let cssClass = (nbStat.count > 0) ? 'positive' : '';
+				resultContent += "<tr class='"+cssClass+"'><td class='nb-found'>"+nbStat.nbFound+"</td><td class='count'>"+nbStat.count+"</td></tr>"
+			}
+			resultContent += "</tbody></table>";
+
+			$resultContainer.html(resultContent);
 		}
 
 		/* Utilitaries */
